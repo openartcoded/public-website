@@ -1,0 +1,21 @@
+{
+  "name": "website_v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "dev": "nodemon -e js,html,njk,css --watch . index.js"
+  },
+  "author": "Nordine Bittich",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "node-fetch": "^3.2.3",
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
