@@ -29,11 +29,12 @@
         {%endblock%}
     </head>
 
-    <body  class="bg-slate-200">
-        <main>
-                {% block sidebar%}
-                {%include "navbar.html" %}
-                {%endblock%}
+    <body  class="h-screen bg-slate-50">
+
+        {% block sidebar%}
+            {%include "navbar.html" %}
+        {%endblock%}
+        <main class="p-2">
 
             {% block content %}
             {%endblock%} 

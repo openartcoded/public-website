@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index",
-    "serve": "nodemon -e js,html,njk,css --watch . index.js",
+    "serve": "nodemon -e js,html,njk,css --watch . index.mjs",
     "tailwind:dev": "npx tailwindcss -i ./tailwind/styles.css -o ./public/css/dist.css --watch",
     "tailwind:minify": "npx tailwindcss -i ./tailwind/styles.css -o ./public/css/dist.css --minify"
   },

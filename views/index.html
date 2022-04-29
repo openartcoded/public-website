@@ -1,10 +1,41 @@
 {% extends "base.html" %}
 
 {% block title%}
-  La mif
+CV
 {% endblock %}
 
 
 {%block content%}
-  {{message}}
+<div class="sm:block lg:flex lg:place-content-center  lg:gap-4">
+  <div class="lg:w-fit">
+    {% for skill in publicInfo.skills%}
+    <div class="bg-slate-600 rounded mb-2 p-2">
+      <p class="bg-stone-200 rounded font-bold p-2">{{skill.name}}</p>
+      <div class="grid grid-cols-3 gap-1 pt-2">
+        {%for tag in skill.tags%}
+        <span class="bg-yellow-100 hover:bg-orange-500 rounded p-1 break-words">{{tag}}</span>
+        {%endfor%}
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+  <div class="lg:w-6/12">
+    {%for experience in publicInfo.experiences%}
+    <div class="bg-slate-600 rounded mb-2 p-2">
+      <!-- {{publicInfo.experiences | json}} -->
+      <div class="bg-stone-200 rounded p-2 flex justify-between">
+        <span class="font-semibold">{{experience.title}}</span>
+        <span class="font-medium ">{{experience.from | date}} - {{"Current" if experience.current else experience.to |
+          date}}</span>
+      </div>
+      <ul class="pt-2">
+        {%for description in experience.description%}
+        <li class="leading-7 hover:bg-orange-500 bg-yellow-100 p-1 mb-1 rounded break-normal">{{description}}</li>
+        {%endfor%}
+      </ul>
+    </div>
+    {%endfor%}
+  </div>
+</div>
+
 {%endblock%}

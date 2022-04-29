@@ -3,9 +3,13 @@
     <div class="md:flex md:justify-between">
         <a class="hidden md:inline" class=href="/">
             {%block navTitle%}
-                {{ publicInfo.person.lastname | capitalize }}
-                {{ publicInfo.person.firstname | capitalize}}
-                {%endblock%}
+                {%if publicInfo %}
+                    {{ publicInfo.person.lastname | capitalize }}
+                    {{ publicInfo.person.firstname | capitalize}}
+                {%else %}
+                    artcoded
+                {%endif%}
+            {%endblock%}
             </a>
            <div class="flex justify-evenly md:justify-end gap-8">
             <a class="font-medium visible md:hidden hover:underline underline-offset-4 decoration-pink-500" href="#">Home</a>

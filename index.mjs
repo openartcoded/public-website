@@ -3,7 +3,7 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 
 import express from "express";
 import nunjucks from "nunjucks";
-import { getPublicInformation } from "./api.js";
+import { getPublicInformation } from "./api.mjs";
 
 const app = express();
 
@@ -14,9 +14,25 @@ app.use(
     extended: true,
   })
 );
-nunjucks.configure("views", {
+
+const nunjucksEnv = nunjucks.configure("views", {
   autoescape: true,
   express: app,
+});
+
+nunjucksEnv.addFilter('json', function (value, spaces) {
+  if (value instanceof nunjucks.runtime.SafeString) {
+    value = value.toString()
+  }
+  const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c');
+  return nunjucks.runtime.markSafe(jsonString)
+});
+nunjucksEnv.addFilter('date', function (value, spaces) {
+  if (value instanceof nunjucks.runtime.SafeString) {
+    value = value.toString()
+  }
+  const dateValue = new Date(value);
+  return nunjucks.runtime.markSafe(dateValue.toLocaleDateString("fr"));
 });
 
 // STATIC
