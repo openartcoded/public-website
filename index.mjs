@@ -27,6 +27,7 @@ nunjucksEnv.addFilter('json', function (value, spaces) {
   const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c');
   return nunjucks.runtime.markSafe(jsonString)
 });
+
 nunjucksEnv.addFilter('date', function (value, spaces) {
   if (value instanceof nunjucks.runtime.SafeString) {
     value = value.toString()
