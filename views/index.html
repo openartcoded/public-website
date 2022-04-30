@@ -6,25 +6,33 @@ CV
 
 
 {%block content%}
+<div class="lg:w-9/12 mx-auto">
+  <h2 class="text-lg font-bold">About Me</h2>
+  <div class="text-gray-200 bg-slate-500 font-medium rounded mb-2 p-2">
+    {{publicInfo.introduction | safe}}
+  </div>
+</div>
 <div class="sm:block lg:flex lg:place-content-center  lg:gap-4">
-  <div class="lg:w-fit">
-    <h2>Skills</h2>
+  
+  <div class="lg:w-3/12">
+    <h2 class="text-lg font-bold">Skills</h2>
+    <input autocomplete='off' class="mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterSkills(event)">
     {% for skill in publicInfo.skills%}
-    <div class="bg-slate-500 rounded mb-2 p-2">
+    <div class="bg-slate-500 rounded mb-2 p-2 skill" data-name="{{skill.name}}">
       <p class="bg-stone-100 rounded font-bold p-2">{{skill.name}}</p>
       <div class="grid grid-cols-3 gap-1 pt-2">
         {%for tag in skill.tags%}
-        <span class="bg-yellow-100 hover:bg-orange-500 rounded p-1 break-words">{{tag}}</span>
+        <span class="bg-yellow-100 hover:bg-orange-500 rounded p-1 break-words tag">{{tag}}</span>
         {%endfor%}
       </div>
     </div>
     {%endfor%}
   </div>
   <div class="lg:w-6/12">
-    <h2>Experiences</h2>
+    <h2 class="text-lg font-bold">Experiences</h2>
+    <input autocomplete='off' class="mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterExperiences(event)">
     {%for experience in publicInfo.experiences%}
-    <div class="bg-slate-500 rounded mb-2 p-2">
-      <!-- {{publicInfo.experiences | json}} -->
+    <div class="bg-slate-500 rounded mb-2 p-2 experience" data-name="{{experience.title}}">
       <div class="bg-stone-100 rounded p-2 flex justify-between">
         <span class="font-semibold">{{experience.title}}</span>
         <span class="font-medium ">{{experience.from | date}} - {{"Current" if experience.current else experience.to |

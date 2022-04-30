@@ -3,9 +3,8 @@
     <div class="md:flex md:justify-between">
         <a class="hidden md:inline" class=href="/">
             {%block navTitle%}
-                {%if publicInfo %}
-                    {{ publicInfo.person.lastname | capitalize }}
-                    {{ publicInfo.person.firstname | capitalize}}
+                {%if pageTitle %}
+                    {{ pageTitle  }}
                 {%else %}
                     artcoded
                 {%endif%}

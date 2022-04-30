@@ -1,9 +1,10 @@
-const SERVER_PORT = process.env.SERVER_PORT || 4000;
-const NODE_ENV = process.env.NODE_ENV || "development";
-
 import express from "express";
 import nunjucks from "nunjucks";
 import { getPublicInformation } from "./api.mjs";
+
+const SERVER_PORT = process.env.SERVER_PORT || 4000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
 
 const app = express();
 
@@ -40,6 +41,7 @@ nunjucksEnv.addFilter('date', function (value, spaces) {
 app.use(express.static("public/favicon"));
 app.use(express.static("public/img"));
 app.use(express.static("public/css"));
+app.use(express.static("public/js"));
 app.use(express.static("public/manifest"));
 
 const aw = (cb) => {
@@ -50,7 +52,7 @@ const aw = (cb) => {
 app.use(
   "/",
   aw(async (req, res, next) => {
-    res.render("index.html", { publicInfo: await getPublicInformation() });
+    res.render("index.html", { publicInfo: await getPublicInformation(), pageTitle: WEBSITE_TITLE });
   })
 );
 
