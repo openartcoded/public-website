@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title%}Gallery{% endblock %}
+
+{%block content%}
+{%set pageNumber =  page.pageable.pageNumber%}
+{%set gridRow = 2 if page.numberOfElements % 2 === 0 else 3 %}
+
+<div class="block lg:flex lg:justify-center lg:grid lg:grid-rows-{{gridRow}} lg:grid-flow-col gap-2">
+  {%for image in page.content%}
+  <div class="mb-2 lg:mb-0 h-full w-full lg:h-72 lg:w-72 ">
+    <img loading="lazy" alt="{{image.title}}" class="object-fill rounded-lg border-2 border-indigo-400  h-full w-full" src="{{image.thumbnailUploadId}}" >
+
+  </div>
+  {%endfor%}
+</div>
+<div class="flex justify-center">
+  {%if pageNumber != 0 %}
+  <a class="underline text-rose-700 mr-2" href="/gallery?page={{pageNumber - 1}}">Previous</a>
+ {%endif%}
+ {%if page.totalPages -1 > pageNumber%}
+  <a class="underline text-rose-700" href="/gallery?page={{pageNumber + 1}}">Next</a>
+ {%endif%}
+</div>
+
+{%endblock%}

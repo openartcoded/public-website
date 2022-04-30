@@ -1,6 +1,6 @@
 import express from "express";
 import nunjucks from "nunjucks";
-import { getPublicInformation } from "./api.mjs";
+import { getPublicInformation, gallery } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -49,6 +49,15 @@ const aw = (cb) => {
 };
 
 // ROUTES
+app.use(
+  "/gallery",
+  aw(async (req, res, next) => {
+    const page = parseInt(req.query.page) || undefined;
+    const pageSize = parseInt(req.query.pageSize) || undefined;
+    res.render("gallery.html", { page: await gallery(page, pageSize ), pageTitle: WEBSITE_TITLE });
+  })
+);
+
 app.use(
   "/",
   aw(async (req, res, next) => {

@@ -32,8 +32,8 @@ function filterExperiences(event) {
         const name = experienceElt.dataset.name;
         const listDescriptionElt = experienceElt.querySelectorAll("li");
 
-        const descriptions = [...listDescriptionElt].map((tagElt) =>
-          tagElt.innerText.toLocaleLowerCase()
+        const descriptions = [...listDescriptionElt].map((elt) =>
+        elt.innerText.toLocaleLowerCase()
         );
         if (
           !name.toLocaleLowerCase().includes(searchLow) &&
