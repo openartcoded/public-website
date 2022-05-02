@@ -4,7 +4,8 @@
 
 
 {%block content%}
-<div class="lg:w-9/12 mx-auto">
+<div class="p-2">
+  <div class="lg:w-9/12 mx-auto">
   <h2 class="text-lg font-bold">About Me</h2>
   <div class="text-gray-200 bg-slate-500 font-medium rounded mb-2 p-2">
     {{publicInfo.introduction | safe}}
@@ -44,6 +45,7 @@
     </div>
     {%endfor%}
   </div>
+</div>
 </div>
 
 {%endblock%}
