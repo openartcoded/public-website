@@ -19,3 +19,20 @@ export async function gallery(page = 0, pageSize = 9) {
   );
   return data;
 }
+
+export async function getBlogPosts(searchCriteria = {}, page = 0, pageSize = 3){
+  const url = `${BACKEND_URL}/api/blog/public-search?page=${page}&size=${pageSize}&sort=updatedDate,DESC`;
+  const response = await fetch(url, {
+    method: "post",
+    headers: {
+      "Content-Type": 'application/json'
+    },
+    body: JSON.stringify(searchCriteria)
+  });
+  return await response.json();
+}
+export async function getBlogPost(id, slug){
+  const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
+  const response = await fetch(url);
+  return await response.json();
+}

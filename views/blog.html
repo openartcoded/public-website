@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title%}Blog{% endblock %}
+{%set pageNumber =  posts.pageable.pageNumber%}
+
+
+{%block content%}
+<div class="p-2 lg:grid lg:justify-center">
+  {# {{posts | json}} #}
+  {%for post in posts.content%}
+    <article class="bg-slate-500 rounded mb-2 p-2">
+      <div class="bg-stone-100 rounded p-2 flex justify-between">
+        <span class="font-semibold">{{post.title}}</span>
+        <span class="font-medium ">{{post.creationDate | date}}</span>
+      </div>
+      <div class="mt-2 p-2 bg-yellow-100">
+        {%set lines = post.description.split('.') %}
+        {%for line in lines%}
+          <p>{{line}}{{'.' if line.length else ''}}</p>
+        {%endfor%}
+      </div>
+      <div class="text-right">
+       <a class="text-slate-100 hover:text-rose-400 text-right" href="/blog/posts/{{post.id}}/{{post.title | slug}}">Read More...</a>
+      </div>
+    </article>
+    {%endfor%}
+    {%if posts.totalPages > 1 %}
+    <div class="flex justify-center">
+      {%if pageNumber != 0 %}
+        <a class="underline text-rose-700 mr-2"  data-href="/blog?page={{pageNumber - 1}}" href="/blog?page={{pageNumber - 1}}">Previous</a>
+      {%endif%}
+      {%if posts.totalPages -1 > pageNumber%}
+        <a class="underline text-rose-700" data-href="/blog?page={{pageNumber + 1}}" href="/blog?page={{pageNumber + 1}}">Next</a>
+      {%endif%}
+    </div>
+  {%endif %}
+</div>
+
+{%endblock%}

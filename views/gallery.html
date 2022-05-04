@@ -16,14 +16,16 @@
     </div>
     {%endfor%}
   </div>
-  <div class="flex justify-center">
-    {%if pageNumber != 0 %}
-    <a class="underline text-rose-700 mr-2"  data-href="/gallery?page={{pageNumber - 1}}" href="/gallery?page={{pageNumber - 1}}">Previous</a>
-   {%endif%}
-   {%if page.totalPages -1 > pageNumber%}
-    <a class="underline text-rose-700" data-href="/gallery?page={{pageNumber + 1}}" href="/gallery?page={{pageNumber + 1}}">Next</a>
-   {%endif%}
-  </div>
+  {%if page.totalPages > 1 %}
+    <div class="flex justify-center">
+      {%if pageNumber != 0 %}
+        <a class="underline text-rose-700 mr-2"  data-href="/gallery?page={{pageNumber - 1}}" href="/gallery?page={{pageNumber - 1}}">Previous</a>
+      {%endif%}
+      {%if page.totalPages -1 > pageNumber%}
+        <a class="underline text-rose-700" data-href="/gallery?page={{pageNumber + 1}}" href="/gallery?page={{pageNumber + 1}}">Next</a>
+      {%endif%}
+    </div>
+  {%endif %}
 </div>
 
 

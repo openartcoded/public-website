@@ -1,14 +1,23 @@
+{% macro linkOrText(name, link) %}
+    {%if activePage == name %}
+       <p class="font-medium underline underline-offset-4 decoration-pink-500">{{name | capitalize}}</p>
+    {%else %}
+       <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="{{link}}">{{name | capitalize}}</a>
+    {%endif%}
+{% endmacro %}
 <nav class="bg-gray-700 w-full p-2 md:p-4 text-white touch-none">
+
 
     <div class="md:flex md:justify-between">
         <a class="hidden md:inline" href="/" data-href="/">{%block navTitle %}{{"artcoded" if not pageTitle else pageTitle}}{%endblock%}</a>
         <div class="flex justify-evenly md:justify-end gap-8">
             <a class="font-medium visible md:hidden hover:underline underline-offset-4 decoration-pink-500"
                 href="/" data-href="/">Home</a>
-            <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="#">Blog</a>
-            <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="/gallery" data-href="/gallery">Gallery</a>
-            <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="#">Sparql</a>
-            <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="#">Contact</a>
+
+                {{linkOrText('blog', '/blog' )}}
+                {{linkOrText('gallery', '/gallery' )}}
+                {{linkOrText('sparql', '/sparql' )}}
+                {{linkOrText('contact', '/contact' )}}
         </div>
     </div>
 </nav>
