@@ -11,42 +11,50 @@ export async function gallery(page = 0, pageSize = 9) {
   const url = `${BACKEND_URL}/api/memzagram/public?page=${page}&size=${pageSize}&sort=updatedDate,DESC`;
   const response = await fetch(url);
   const data = await response.json();
-  data.content.forEach(
-    (g) => {
-        g.thumbnailUploadId = `${BACKEND_URL}/api/resource/public/download/${g.thumbnailUploadId}`;
-        g.imageLink = `${BACKEND_URL}/api/resource/public/download/${g.imageUploadId}`;
-    }
-  );
+  data.content.forEach((g) => {
+    g.thumbnailUploadId = `${BACKEND_URL}/api/resource/public/download/${g.thumbnailUploadId}`;
+    g.imageLink = `${BACKEND_URL}/api/resource/public/download/${g.imageUploadId}`;
+  });
   return data;
 }
 
-export async function getBlogPosts(searchCriteria = {}, page = 0, pageSize = 3){
+export async function getBlogPosts(
+  searchCriteria = {},
+  page = 0,
+  pageSize = 3
+) {
   const url = `${BACKEND_URL}/api/blog/public-search?page=${page}&size=${pageSize}&sort=updatedDate,DESC`;
   const response = await fetch(url, {
     method: "post",
     headers: {
-      "Content-Type": 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(searchCriteria)
+    body: JSON.stringify(searchCriteria),
   });
   return await response.json();
 }
-export async function getBlogPost(id, slug){
+export async function getBlogPost(id, slug) {
   const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
   const response = await fetch(url);
   return await response.json();
 }
-export async function postContactForm(formData){
+export async function postContactForm(formData) {
   const url = `${BACKEND_URL}/api/form-contact/submit`;
   const response = await fetch(url, {
     method: "post",
-    body: {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       fullName: formData.fullName,
       bestTimeToCall: "", // no longer used anyway
       email: formData.emailAddr,
       subject: formData.subject,
-      body: formData.description,
-    }
+      body: formData.description
+    }),
   });
-  return await response.json();
+  if(response.status !== 200) {
+    throw Error(response.statusText);
+  }
+  return "Email sent.";
 }

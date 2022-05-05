@@ -20,7 +20,7 @@
         {% block meta %}{% endblock %}
         <link rel="stylesheet" href="/dist.css">
         {% block css %}
-            {%endblock%}
+         {%endblock%}
         </head>
 
         <body>
@@ -28,15 +28,24 @@
                 {% block navbar%}
                     {%include "navbar.html" %}
                     {%endblock%}
+
                     <div class='relative flex flex-grow'>
                         <main class='bg-slate-50 flex-1'>
+
+                    {%block messageFromBackend %}
+                    {% if message %}
+                    <div class="flex justify-center m-2">
+                        <p class="lg:w-2/6 p-2 rounded bg-slate-700 text-white font-semibold">{{message}}</p>
+                    </div>
+                    {%endif%}
+                {%endblock%}
                             {% block content %}
-                                {%endblock%}
+                            {%endblock%}
                             </main>
                         </div>
                     </div>
 
-                    <script type="text/javascript" src="/app.js"></script>
+                    <script type="text/javascript" src="/app.js" async></script>
                 </body>
 
             </html>

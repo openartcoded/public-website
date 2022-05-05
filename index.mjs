@@ -1,13 +1,22 @@
 import express from "express";
 import nunjucks from "nunjucks";
 import markdown from "nunjucks-markdown";
-import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import sessions from "express-session";
 import { marked } from "marked";
-import { getPublicInformation, gallery, getBlogPosts, getBlogPost } from "./api.mjs";
+import {
+  getPublicInformation,
+  gallery,
+  getBlogPosts,
+  getBlogPost,
+  postContactForm,
+} from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
+const SESSION_KEY =
+  process.env.SESSION_KEY || "thisismysecrctekeyfhrgfgrfrty84fwir767";
 
 const app = express();
 const router = express.Router();
@@ -16,9 +25,22 @@ const router = express.Router();
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: false,
+    extended: true,
   })
 );
+
+const oneDay = 1000 * 60 * 60 * 24;
+
+app.use(
+  sessions({
+    secret: SESSION_KEY,
+    saveUninitialized: false,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  })
+);
+
+app.use(cookieParser());
 
 configureNunjucks(app);
 
@@ -37,16 +59,25 @@ const aw = (cb) => {
 router.get(
   "/contact",
   aw(async (req, res, next) => {
+    const message = req.query.message;
     res.render("contact.html", {
       pageTitle: WEBSITE_TITLE,
-      activePage: 'contact'
+      activePage: "contact",
+      message,
     });
   })
 );
 router.post(
   "/contact",
   aw(async (req, res, next) => {
-   console.log(req.body)
+    if (req.session?.mailSent) {
+      res.redirect("/contact?message=" + "mail already sent");
+    } else {
+      const message = await postContactForm(req.body);
+      req.session.mailSent = true;
+
+      res.redirect("/contact?message=" + message);
+    }
   })
 );
 router.get(
@@ -57,7 +88,7 @@ router.get(
     res.render("gallery.html", {
       page: await gallery(page, pageSize),
       pageTitle: WEBSITE_TITLE,
-      activePage: 'gallery'
+      activePage: "gallery",
     });
   })
 );
@@ -70,7 +101,7 @@ router.get(
     res.render("post.html", {
       post: await getBlogPost(id, slug),
       pageTitle: WEBSITE_TITLE,
-      activePage: 'blog'
+      activePage: "blog",
     });
   })
 );
@@ -82,7 +113,7 @@ router.get(
     res.render("blog.html", {
       posts: await getBlogPosts({}, page, pageSize),
       pageTitle: WEBSITE_TITLE,
-      activePage: 'blog'
+      activePage: "blog",
     });
   })
 );
@@ -93,11 +124,10 @@ router.get(
     res.render("index.html", {
       publicInfo: await getPublicInformation(),
       pageTitle: WEBSITE_TITLE,
-      activePage: 'home'
+      activePage: "home",
     });
   })
 );
-
 
 app.use("/", router);
 // ERROR
