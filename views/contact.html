@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title%}{{post.title}}
+{% endblock %}
+
+{%block content%}
+
+<div class="grid  p-2 lg:flex lg:justify-center">
+    <div class="lg:w-2/6 bg-slate-500 rounded ">
+        <div class="bg-stone-100 rounded p-2 m-2 ">
+            <span class="font-semibold">Contact me</span>
+        </div>
+        <div class=" bg-stone-100 m-2 rounded p-2">
+            <form method="post" action="contact">
+                <div class="grid grid-cols-1">
+                    <label for="fullName">Full name</label>
+                    <input class="rounded w-full" type="text" required id="fullName" name="fullName">
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="emailAddr">Email</label>
+                    <input class="rounded w-full" type="email" required id="emailAddr" name="emailAddr">
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="phoneNumber">Phone number</label>
+                    <input class="rounded w-full" type="text" required id="phoneNumber" name="phoneNumber">
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="subject">Subject</label>
+                    <input class="rounded w-full" type="text" required id="subject" name="subject">
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="description">Description</label>
+                    <textarea class="rounded w-full" type="text" required id="description" name="description"></textarea>
+                </div>
+
+                <div class="flex justify-end mt-2 ">
+                <input type="submit" value="Submit" class="bg-blue-300 rounded p-2  hover:bg-yellow-300">
+
+                </div>
+            </form>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+{%endblock%}

@@ -1,6 +1,7 @@
 import express from "express";
 import nunjucks from "nunjucks";
 import markdown from "nunjucks-markdown";
+import bodyParser from "body-parser";
 import { marked } from "marked";
 import { getPublicInformation, gallery, getBlogPosts, getBlogPost } from "./api.mjs";
 
@@ -9,12 +10,13 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
 
 const app = express();
+const router = express.Router();
 
 // CONFIG
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: false,
   })
 );
 
@@ -32,7 +34,22 @@ const aw = (cb) => {
 };
 
 // ROUTES
-app.use(
+router.get(
+  "/contact",
+  aw(async (req, res, next) => {
+    res.render("contact.html", {
+      pageTitle: WEBSITE_TITLE,
+      activePage: 'contact'
+    });
+  })
+);
+router.post(
+  "/contact",
+  aw(async (req, res, next) => {
+   console.log(req.body)
+  })
+);
+router.get(
   "/gallery",
   aw(async (req, res, next) => {
     const page = parseInt(req.query.page) || undefined;
@@ -45,7 +62,7 @@ app.use(
   })
 );
 // ROUTES
-app.use(
+router.get(
   "/blog/posts/:postId/:slug",
   aw(async (req, res, next) => {
     const id = req.params.postId;
@@ -57,7 +74,7 @@ app.use(
     });
   })
 );
-app.use(
+router.get(
   "/blog",
   aw(async (req, res, next) => {
     const page = parseInt(req.query.page) || undefined;
@@ -70,7 +87,7 @@ app.use(
   })
 );
 
-app.use(
+router.get(
   "/",
   aw(async (req, res, next) => {
     res.render("index.html", {
@@ -81,6 +98,8 @@ app.use(
   })
 );
 
+
+app.use("/", router);
 // ERROR
 
 app.use((err, req, res, next) => {

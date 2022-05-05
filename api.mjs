@@ -36,3 +36,17 @@ export async function getBlogPost(id, slug){
   const response = await fetch(url);
   return await response.json();
 }
+export async function postContactForm(formData){
+  const url = `${BACKEND_URL}/api/form-contact/submit`;
+  const response = await fetch(url, {
+    method: "post",
+    body: {
+      fullName: formData.fullName,
+      bestTimeToCall: "", // no longer used anyway
+      email: formData.emailAddr,
+      subject: formData.subject,
+      body: formData.description,
+    }
+  });
+  return await response.json();
+}
