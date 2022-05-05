@@ -67,3 +67,8 @@ function displayImageGallery(event) {
   gallery.classList.add("hidden");
   galleryDetail.classList.remove("hidden");
 }
+
+window.onload= ()=>
+  [...document.getElementsByClassName("noJs")].forEach(needJsElt => {
+    needJsElt.classList.remove('hidden');
+  });

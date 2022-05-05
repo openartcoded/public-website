@@ -27,10 +27,9 @@
       </div>
     </div>
     <div class="sm:block lg:flex lg:place-content-center  lg:gap-4">
-
       <div class="lg:w-3/12">
         <h2 class="text-lg font-bold">Skills</h2>
-        <input autocomplete='off' class="mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterSkills(event)">
+        <input autocomplete='off' class="noJs hidden mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterSkills(event)">
         {% for skill in publicInfo.skills%}
           <div class="bg-slate-500 rounded mb-2 p-2 skill" data-name="{{skill.name}}">
             <p class="bg-stone-100 rounded font-bold p-2">{{skill.name}}</p>
@@ -44,7 +43,7 @@
           </div>
           <div class="lg:w-6/12">
             <h2 class="text-lg font-bold">Experiences</h2>
-            <input autocomplete='off' class="mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterExperiences(event)">
+            <input autocomplete='off' class="noJs hidden mb-2 rounded-full w-full" type="text" placeholder="search..." onkeyup="filterExperiences(event)">
             {%for experience in publicInfo.experiences%}
               <div class="bg-slate-500 rounded mb-2 p-2 experience" data-name="{{experience.title}}">
                 <div class="bg-stone-100 rounded p-2 flex justify-between">
