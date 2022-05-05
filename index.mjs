@@ -8,12 +8,30 @@ import {
   getPublicInformation,
   gallery,
   getBlogPosts,
+  postSparqlQuery,
   getBlogPost,
   postContactForm,
 } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
-const NODE_ENV = process.env.NODE_ENV || "development";
+const SPARQL_DEFAULT_URL = process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
+const SPARQL_DEFAULT_QUERY = process.env.SPARQL_DEFAULT_QUERY ||  `  
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX cv: <http://rdfs.org/resume-rdf/cv.rdfs#>
+PREFIX baseCv: <http://rdfs.org/resume-rdf/base.rdfs#>
+
+CONSTRUCT {?s ?p ?o}
+WHERE {
+  graph <https://bittich.be/graphs/public>{
+    ?s ?p ?o
+  }
+}
+`;
+
 const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
 const SESSION_KEY =
   process.env.SESSION_KEY || "thisismysecrctekeyfhrgfgrfrty84fwir767";
@@ -56,6 +74,33 @@ const aw = (cb) => {
 };
 
 // ROUTES
+router.get(
+  "/sparql-form",
+  aw(async (req, res, next) => {
+    res.render("sparql.html", {
+      pageTitle: WEBSITE_TITLE,
+      activePage: "sparql-form",
+      defaultEndpoint: SPARQL_DEFAULT_URL,
+      defaultQuery: SPARQL_DEFAULT_QUERY,
+      defaultAcceptType: 'application/trig'
+    });
+  })
+);
+router.post(
+  "/sparql-form",
+  aw(async (req, res, next) => {
+    const result = await postSparqlQuery(req.body);
+
+    res.render("sparql.html", {
+      pageTitle: WEBSITE_TITLE,
+      result,
+      activePage: "sparql-form",
+      defaultEndpoint: SPARQL_DEFAULT_URL,
+      defaultQuery: SPARQL_DEFAULT_QUERY,
+      defaultAcceptType: 'application/trig'
+    });
+  })
+);
 router.get(
   "/contact",
   aw(async (req, res, next) => {

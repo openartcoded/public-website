@@ -1,0 +1,63 @@
+{%macro acceptOption(value, name )%}
+<option autocomplete="off" {{'selected' if defaultAcceptType===value else '' }} value="{{value}}">{{name}}</option>
+
+{%endmacro%}
+{% extends "base.html" %}
+
+{% block title%}Sparql{% endblock %}
+
+{%block content%}
+
+<div class="grid w-full p-2 md:align:middle  md:flex md:justify-center">
+    <div class="w-5/12 bg-slate-500 rounded h-fit block ">
+        <div class="bg-stone-100 rounded p-2 m-2 ">
+            <span class="font-semibold">Sparql endpoint</span>
+        </div>
+        <div class="bg-stone-100 m-2 rounded p-2">
+            <form method="post" action="sparql-form">
+                <div class="grid grid-cols-1">
+                    <label for="url">Endpoint</label>
+                    <input class="rounded w-full" type="url" required id="sparqlEndpoint" name="sparqlEndpoint"
+                        value="{{defaultEndpoint}}">
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="acceptType">Accept (Construct/Describe)</label>
+                    <select class="rounded w-full" required id="acceptType" name="acceptType">
+                        {{acceptOption("text/turtle", "Turtle")}}
+                        {{acceptOption("application/rdf+json", "RDF/JSON")}}
+                        {{acceptOption("application/rdf+xml", "RDF/XML")}}
+                        {{acceptOption("application/trig", "TriG")}}
+                        {{acceptOption("application/n-triples", "N-Triples")}}
+                        {{acceptOption("application/n-quads", "N-Quads")}}
+                    </select>
+                </div>
+                <div class="grid grid-cols-1">
+                    <label for="sparqlQuery">Query</label>
+                    <textarea rows="16" class="rounded w-full" type="text" required id="sparqlQuery"
+                        name="sparqlQuery">{{defaultQuery}}</textarea>
+                </div>
+
+                <div class="flex justify-end mt-2 ">
+                    <input type="submit" value="Submit" class="bg-blue-300 rounded p-2  hover:bg-yellow-300">
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{%if result %}
+
+<div class="grid grid-cols-1 p-2 md:align:middle md:flex md:justify-center ">
+            <div class="prose prose-2xl bg-stone-100 rounded ">
+                <pre>
+                    <code>
+                        {{result.data if result.data else result | json(2)}}
+                    </code>
+                </pre>
+            </div>
+
+</div>
+{%endif %}
+
+{%endblock%}

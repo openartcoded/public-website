@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-
+import { Parser } from "sparqljs";
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000";
 
 export async function getPublicInformation() {
@@ -50,11 +50,50 @@ export async function postContactForm(formData) {
       bestTimeToCall: "", // no longer used anyway
       email: formData.emailAddr,
       subject: formData.subject,
-      body: formData.description
+      body: formData.description,
     }),
   });
-  if(response.status !== 200) {
+  if (response.status !== 200) {
     throw Error(response.statusText);
   }
   return "Email sent.";
+}
+
+export async function postSparqlQuery(formData) {
+  const url = formData.sparqlEndpoint;
+  const query = formData.sparqlQuery;
+  let sparqlResultType = "application/sparql-results+json";
+  let accept = sparqlResultType;
+
+  try {
+    const sparqlQuery = new Parser().parse(query);
+    if (sparqlQuery.type !== "query") {
+      return { error: "only updates allowed" };
+    }
+    if (
+      sparqlQuery.queryType === "DESCRIBE" ||
+      sparqlQuery.queryType === "CONSTRUCT"
+    ) {
+      accept = formData.acceptType;
+    }
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.set("query", query);
+    const response = await fetch(url, {
+      method: "post",
+      headers: {
+        Accept: accept,
+      },
+      body: urlSearchParams,
+    });
+    if (response.status !== 200) {
+      throw Error(response.statusText);
+    }
+    if (accept === sparqlResultType) {
+      return await response.json();
+    }
+    return { data: await response.text() };
+  } catch (e) {
+    console.error(e);
+    return { error: "could not parse or execute query," + e.message };
+  }
 }

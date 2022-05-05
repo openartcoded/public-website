@@ -5,13 +5,13 @@
 
 {%block content%}
 
-    <div class="grid  p-2  grid-cols-1 lg:flex lg:justify-center">
+    <div class="grid  p-2  grid-cols-1 md:flex md:justify-center">
         <div class="bg-slate-500 rounded ">
         <div class="bg-stone-100 rounded p-2 m-2 flex justify-between">
             <span class="font-semibold">{{post.title}}</span>
             <span class="font-medium ">{{post.creationDate | date}}</span>
         </div>
-        <article class="prose bg-stone-100 m-2 rounded p-2 lg:prose-xl">
+        <article class="prose bg-stone-100 m-2 rounded p-2 md:prose-xl">
             {%markdown%}
             {{post.content | safe}}
             {%endmarkdown%}
