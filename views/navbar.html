@@ -1,8 +1,8 @@
 {% macro linkOrText(name, link) %}
-    {%if activePage == name %}
+    {%if activePage == link %}
        <p class="font-medium underline underline-offset-4 decoration-pink-500">{{name | capitalize}}</p>
     {%else %}
-       <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="{{link}}">{{name | capitalize}}</a>
+       <a class="font-medium hover:underline underline-offset-4 decoration-pink-500" href="/{{link}}">{{name | capitalize}}</a>
     {%endif%}
 {% endmacro %}
 <nav class="bg-gray-700 w-full p-2 md:p-4 text-white touch-none">
@@ -12,10 +12,10 @@
             <a class="font-medium visible md:hidden hover:underline underline-offset-4 decoration-pink-500"
                 href="/" data-href="/">Home</a>
 
-                {{linkOrText('blog', '/blog' )}}
-                {{linkOrText('gallery', '/gallery' )}}
-                {{linkOrText('sparql', '/sparql-form' )}}
-                {{linkOrText('contact', '/contact' )}}
+                {{linkOrText('blog', 'blog' )}}
+                {{linkOrText('gallery', 'gallery' )}}
+                {{linkOrText('sparql', 'sparql-form' )}}
+                {{linkOrText('contact', 'contact' )}}
         </div>
     </div>
 </nav>
