@@ -7,9 +7,8 @@
 {% block title%}Sparql{% endblock %}
 
 {%block content%}
-
-<div class="grid w-full p-2 md:align:middle  md:flex md:justify-center">
-    <div class="w-5/12 bg-slate-500 rounded h-fit block ">
+<div class="grid gap-2 p-2  lg:flex lg:justify-center">
+    <div class="lg:w-5/12 bg-slate-500 rounded h-fit  ">
         <div class="bg-stone-100 rounded p-2 m-2 ">
             <span class="font-semibold">Sparql endpoint</span>
         </div>
@@ -44,12 +43,8 @@
             </form>
         </div>
     </div>
-
-</div>
-{%if result %}
-
-<div class="grid grid-cols-1 p-2 md:align:middle md:flex md:justify-center ">
-            <div class="prose prose-2xl bg-stone-100 rounded ">
+    {%if result %}
+            <div class="prose lg:prose-2xl bg-stone-100 rounded grid grid-cols-1 max-h-[43rem] overflow-auto">
                 <pre>
                     <code>
                         {{result.data if result.data else result | json(2)}}
@@ -57,7 +52,9 @@
                 </pre>
             </div>
 
-</div>
 {%endif %}
+</div>
+
+
 
 {%endblock%}

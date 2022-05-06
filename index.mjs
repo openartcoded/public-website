@@ -95,9 +95,9 @@ router.post(
       pageTitle: WEBSITE_TITLE,
       result,
       activePage: "sparql-form",
-      defaultEndpoint: SPARQL_DEFAULT_URL,
-      defaultQuery: SPARQL_DEFAULT_QUERY,
-      defaultAcceptType: 'application/trig'
+      defaultEndpoint: req.body.sparqlEndpoint,
+      defaultQuery: req.body.sparqlQuery,
+      defaultAcceptType: req.body.acceptType
     });
   })
 );
@@ -169,7 +169,7 @@ router.get(
     res.render("index.html", {
       publicInfo: await getPublicInformation(),
       pageTitle: WEBSITE_TITLE,
-      activePage: "home",
+      activePage: "",
     });
   })
 );
