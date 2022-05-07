@@ -10,6 +10,13 @@ COPY public public
 
 COPY views views
 
-COPY index.js index.js
+COPY tailwind tailwind
 
-ENTRYPOINT [ "node", "index.js" ]
+COPY index.mjs index.mjs
+COPY api.mjs api.mjs
+
+COPY tailwind.config.js tailwind.config.js
+
+RUN npm run tailwind:minify
+
+ENTRYPOINT [ "node", "index.mjs" ]
