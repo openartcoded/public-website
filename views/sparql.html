@@ -15,11 +15,6 @@
         <div class="bg-stone-100 m-2 rounded p-2">
             <form method="post" action="sparql-form">
                 <div class="grid grid-cols-1">
-                    <label for="url">Endpoint</label>
-                    <input class="rounded w-full" type="url" required id="sparqlEndpoint" name="sparqlEndpoint"
-                        value="{{defaultEndpoint}}">
-                </div>
-                <div class="grid grid-cols-1">
                     <label for="acceptType">Accept (Construct/Describe)</label>
                     <select class="rounded w-full" required id="acceptType" name="acceptType">
                         {{acceptOption("text/turtle", "Turtle")}}
