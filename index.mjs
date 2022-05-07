@@ -15,8 +15,6 @@ import {
 } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
-const SPARQL_DEFAULT_URL =
-  process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
 const SPARQL_DEFAULT_QUERY =
   process.env.SPARQL_DEFAULT_QUERY ||
   `  
@@ -96,7 +94,6 @@ router.get(
     res.render("sparql.html", {
       pageTitle: WEBSITE_TITLE,
       activePage: "sparql-form",
-      defaultEndpoint: SPARQL_DEFAULT_URL,
       defaultQuery: SPARQL_DEFAULT_QUERY,
       defaultAcceptType: "application/trig",
     });
@@ -111,7 +108,6 @@ router.post(
       pageTitle: WEBSITE_TITLE,
       result,
       activePage: "sparql-form",
-      defaultEndpoint: req.body.sparqlEndpoint,
       defaultQuery: req.body.sparqlQuery,
       defaultAcceptType: req.body.acceptType,
     });

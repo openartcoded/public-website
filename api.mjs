@@ -2,6 +2,9 @@ import fetch from "node-fetch";
 import { Parser } from "sparqljs";
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000";
 
+const SPARQL_DEFAULT_URL =
+  process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
+
 export async function getPublicInformation() {
   const response = await fetch(`${BACKEND_URL}/api/cv`);
   return await response.json();
@@ -70,7 +73,7 @@ export async function postContactForm(formData) {
 }
 
 export async function postSparqlQuery(formData) {
-  const url = formData.sparqlEndpoint;
+  const url = SPARQL_DEFAULT_URL;
   const query = formData.sparqlQuery;
   let sparqlResultType = "application/sparql-results+json";
   let accept = sparqlResultType;
