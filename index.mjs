@@ -11,11 +11,15 @@ import {
   postSparqlQuery,
   getBlogPost,
   postContactForm,
+  download,
 } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
-const SPARQL_DEFAULT_URL = process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
-const SPARQL_DEFAULT_QUERY = process.env.SPARQL_DEFAULT_QUERY ||  `  
+const SPARQL_DEFAULT_URL =
+  process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
+const SPARQL_DEFAULT_QUERY =
+  process.env.SPARQL_DEFAULT_QUERY ||
+  `  
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -75,6 +79,18 @@ const aw = (cb) => {
 
 // ROUTES
 router.get(
+  "/resource/:id",
+  aw(async (req, res, next) => {
+    const resp = await download(req.params.id);
+    const headers = Array.from(resp.headers)
+      .filter(([key]) => !key.includes("content-encoding"))
+      .reduce((headers, [key, value]) => ({ [key]: value, ...headers }), {});
+    res.set(headers);
+
+    res.status(200).send(Buffer.from(await resp.arrayBuffer()));
+  })
+);
+router.get(
   "/sparql-form",
   aw(async (req, res, next) => {
     res.render("sparql.html", {
@@ -82,7 +98,7 @@ router.get(
       activePage: "sparql-form",
       defaultEndpoint: SPARQL_DEFAULT_URL,
       defaultQuery: SPARQL_DEFAULT_QUERY,
-      defaultAcceptType: 'application/trig'
+      defaultAcceptType: "application/trig",
     });
   })
 );
@@ -97,7 +113,7 @@ router.post(
       activePage: "sparql-form",
       defaultEndpoint: req.body.sparqlEndpoint,
       defaultQuery: req.body.sparqlQuery,
-      defaultAcceptType: req.body.acceptType
+      defaultAcceptType: req.body.acceptType,
     });
   })
 );

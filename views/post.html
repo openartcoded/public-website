@@ -7,15 +7,17 @@
 
     <div class="grid  p-2  grid-cols-1 md:flex md:justify-center">
         <div class="bg-slate-500 rounded ">
-        <div class="bg-stone-100 rounded p-2 m-2 flex justify-between">
-            <span class="font-semibold">{{post.title}}</span>
-            <span class="font-medium ">{{post.creationDate | date}}</span>
-        </div>
-        <article class="prose bg-stone-100 m-2 rounded p-2 md:prose-xl">
-            {%markdown%}
-            {{post.content | safe}}
-            {%endmarkdown%}
-        </article>
+            <div class="bg-stone-100 rounded p-2 m-2 flex justify-between">
+                <span class="font-semibold">{{post.title}}</span>
+                <span class="font-medium ">{{post.creationDate | date}}</span>
+            </div>
+            <img class="p-2 w-full" src="{{post.coverUrl}}">
+            
+            <article class="prose bg-stone-100 m-2 rounded p-2 md:prose-2xl">
+                {%markdown%}
+                {{post.content | safe}}
+                {%endmarkdown%}
+            </article>
 
 
         </div>

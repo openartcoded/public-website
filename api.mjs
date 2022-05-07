@@ -12,10 +12,18 @@ export async function gallery(page = 0, pageSize = 9) {
   const response = await fetch(url);
   const data = await response.json();
   data.content.forEach((g) => {
-    g.thumbnailUploadId = `${BACKEND_URL}/api/resource/public/download/${g.thumbnailUploadId}`;
-    g.imageLink = `${BACKEND_URL}/api/resource/public/download/${g.imageUploadId}`;
+    g.thumbnailUploadId = `/resource/${g.thumbnailUploadId}`;
+    g.imageLink = `/resource/${g.imageUploadId}`;
   });
   return data;
+}
+
+export async function download(id) {
+  const resp = await fetch(`${BACKEND_URL}/api/resource/public/download/${id}`);
+  if(resp.status !== 200) {
+    throw Error(`response status not 200: status: ${resp.status}, message: ${resp.statusText}`);
+  }
+  return resp;
 }
 
 export async function getBlogPosts(
@@ -36,7 +44,9 @@ export async function getBlogPosts(
 export async function getBlogPost(id, slug) {
   const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
   const response = await fetch(url);
-  return await response.json();
+  const json = await response.json();
+  json.coverUrl= `/resource/${json.coverId}`;
+  return json;
 }
 export async function postContactForm(formData) {
   const url = `${BACKEND_URL}/api/form-contact/submit`;
