@@ -38,18 +38,23 @@
             </form>
         </div>
     </div>
+
+</div>
+
     {%if result %}
-            <div class="prose lg:prose-2xl bg-stone-100 rounded grid grid-cols-1 max-h-[43rem] overflow-auto">
+
+    <div class="grid  p-2 lg:flex lg:justify-center mb-2">
+            <div class="prose lg:prose-2xl bg-stone-100 rounded  max-h-[43rem] overflow-auto">
                 <pre>
                     <code>
                         {{result.data if result.data else result | json(2)}}
                     </code>
                 </pre>
             </div>
+    </div>
+
+
 
 {%endif %}
-</div>
-
-
 
 {%endblock%}

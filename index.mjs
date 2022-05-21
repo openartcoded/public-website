@@ -1,9 +1,7 @@
 import express from "express";
-import nunjucks from "nunjucks";
-import markdown from "nunjucks-markdown";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
-import { marked } from "marked";
+import { configureNunjucks } from "./init.mjs";
 import {
   getPublicInformation,
   gallery,
@@ -78,7 +76,7 @@ const aw = (cb) => {
 // ROUTES
 router.get(
   "/resource/:id",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const resp = await download(req.params.id);
     const headers = Array.from(resp.headers)
       .filter(([key]) => !key.includes("content-encoding"))
@@ -90,7 +88,7 @@ router.get(
 );
 router.get(
   "/sparql-form",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     res.render("sparql.html", {
       pageTitle: WEBSITE_TITLE,
       activePage: "sparql-form",
@@ -101,7 +99,7 @@ router.get(
 );
 router.post(
   "/sparql-form",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const result = await postSparqlQuery(req.body);
 
     res.render("sparql.html", {
@@ -115,7 +113,7 @@ router.post(
 );
 router.get(
   "/contact",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const message = req.query.message;
     res.render("contact.html", {
       pageTitle: WEBSITE_TITLE,
@@ -126,7 +124,7 @@ router.get(
 );
 router.post(
   "/contact",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     if (req.session?.mailSent) {
       res.redirect("/contact?message=" + "mail already sent");
     } else {
@@ -139,7 +137,7 @@ router.post(
 );
 router.get(
   "/gallery",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     res.render("gallery.html", {
@@ -152,7 +150,7 @@ router.get(
 // ROUTES
 router.get(
   "/blog/posts/:postId/:slug",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const id = req.params.postId;
     const slug = req.params.slug;
     res.render("post.html", {
@@ -164,7 +162,7 @@ router.get(
 );
 router.get(
   "/blog",
-  aw(async (req, res, next) => {
+  aw(async (req, res, _next) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     res.render("blog.html", {
@@ -177,7 +175,7 @@ router.get(
 
 router.get(
   "/",
-  aw(async (req, res, next) => {
+  aw(async (_req, res, _next) => {
     res.render("index.html", {
       publicInfo: await getPublicInformation(),
       pageTitle: WEBSITE_TITLE,
@@ -189,7 +187,7 @@ router.get(
 app.use("/", router);
 // ERROR
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   res.status(500);
   console.error(err.stack);
   res.render("error.html", { error: err });
@@ -197,46 +195,4 @@ app.use((err, req, res, next) => {
 
 app.listen(SERVER_PORT, () => console.log(`Listen to ${SERVER_PORT}`));
 
-function configureNunjucks(app) {
-  const nunjucksEnv = nunjucks.configure("views", {
-    autoescape: true,
-    express: app,
-  });
 
-  nunjucksEnv.addFilter("json", function (value, spaces) {
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const jsonString = JSON.stringify(value, null, spaces).replace(
-      /</g,
-      "\\u003c"
-    );
-    return nunjucks.runtime.markSafe(jsonString);
-  });
-  nunjucksEnv.addFilter("slug", function (value, spaces) {
-    const slugify = (input) => {
-      return input
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, "-") // Replace spaces with -
-        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-        .replace(/\-\-+/g, "-") // Replace multiple - with single -
-        .replace(/^-+/, "") // Trim - from start of text
-        .replace(/-+$/, ""); // Trim - from end of text
-    };
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const slug = slugify(value);
-    return nunjucks.runtime.markSafe(slug);
-  });
-
-  nunjucksEnv.addFilter("date", function (value, spaces) {
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const dateValue = new Date(value);
-    return nunjucks.runtime.markSafe(dateValue.toLocaleDateString("fr"));
-  });
-  markdown.register(nunjucksEnv, marked);
-}
