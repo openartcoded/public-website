@@ -14,6 +14,7 @@ COPY tailwind tailwind
 
 COPY index.mjs index.mjs
 COPY api.mjs api.mjs
+COPY init.mjs init.mjs 
 
 COPY tailwind.config.js tailwind.config.js
 
