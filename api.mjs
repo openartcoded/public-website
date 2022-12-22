@@ -81,7 +81,7 @@ export async function postSparqlQuery(formData) {
   try {
     const sparqlQuery = new Parser().parse(query);
     if (sparqlQuery.type !== "query") {
-      return { error: "only updates allowed" };
+      return { error: "inserts/updates not allowed" };
     }
     if (
       sparqlQuery.queryType === "DESCRIBE" ||
