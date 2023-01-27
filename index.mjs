@@ -88,7 +88,7 @@ router.get(
 );
 router.get(
   "/sparql-form",
-  aw(async (req, res, _next) => {
+  aw(async (_req, res, _next) => {
     res.render("sparql.html", {
       pageTitle: WEBSITE_TITLE,
       activePage: "sparql-form",
@@ -128,8 +128,8 @@ router.post(
     if (req.session?.mailSent) {
       res.redirect("/contact?message=" + "mail already sent");
     } else {
-      const message = await postContactForm(req.body);
-      req.session.mailSent = true;
+      const { valid, message } = await postContactForm(req.body);
+      req.session.mailSent = valid;
 
       res.redirect("/contact?message=" + message);
     }
@@ -196,3 +196,40 @@ app.use((err, _req, res, _next) => {
 app.listen(SERVER_PORT, () => console.log(`Listen to ${SERVER_PORT}`));
 
 
+  nunjucksEnv.addFilter("json", function(value, spaces) {
+    if (value instanceof nunjucks.runtime.SafeString) {
+      value = value.toString();
+    }
+    const jsonString = JSON.stringify(value, null, spaces).replace(
+      /</g,
+      "\\u003c"
+    );
+    return nunjucks.runtime.markSafe(jsonString);
+  });
+  nunjucksEnv.addFilter("slug", function(value, _spaces) {
+    const slugify = (input) => {
+      return input
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+        .replace(/\-\-+/g, "-") // Replace multiple - with single -
+        .replace(/^-+/, "") // Trim - from start of text
+        .replace(/-+$/, ""); // Trim - from end of text
+    };
+    if (value instanceof nunjucks.runtime.SafeString) {
+      value = value.toString();
+    }
+    const slug = slugify(value);
+    return nunjucks.runtime.markSafe(slug);
+  });
+
+  nunjucksEnv.addFilter("date", function(value, _spaces) {
+    if (value instanceof nunjucks.runtime.SafeString) {
+      value = value.toString();
+    }
+    const dateValue = new Date(value);
+    return nunjucks.runtime.markSafe(dateValue.toLocaleDateString("fr"));
+  });
+  markdown.register(nunjucksEnv, marked);
+}

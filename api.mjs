@@ -23,7 +23,7 @@ export async function gallery(page = 0, pageSize = 9) {
 
 export async function download(id) {
   const resp = await fetch(`${BACKEND_URL}/api/resource/public/download/${id}`);
-  if(resp.status !== 200) {
+  if (resp.status !== 200) {
     throw Error(`response status not 200: status: ${resp.status}, message: ${resp.statusText}`);
   }
   return resp;
@@ -48,28 +48,64 @@ export async function getBlogPost(id, slug) {
   const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
   const response = await fetch(url);
   const json = await response.json();
-  json.coverUrl= `/resource/${json.coverId}`;
+  json.coverUrl = `/resource/${json.coverId}`;
   return json;
 }
+
+function sanitize(input) {
+  let sanitized = (input || "").trim();
+  if (!sanitized.length) {
+    return "";
+  }
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    "/": '&#x2F;',
+  };
+  const reg = /[&<>"'/]/ig;
+  return sanitized.replace(reg, (match) => (map[match]));
+}
+
 export async function postContactForm(formData) {
   const url = `${BACKEND_URL}/api/form-contact/submit`;
+  // sanitize & validate form
+
+  const checkNotBot = formData.check;
+  if (checkNotBot?.length) {
+    console.log("bot detected");
+    return { valid: true, message: "Email sent" };
+  }
+  const fullName = sanitize(formData.fullName);
+  const emailAddr = sanitize(formData.emailAddr);
+  const subject = sanitize(formData.subject);
+  const phoneNumber = sanitize(formData.phoneNumber);
+  const description = sanitize(formData.description);
+
+  if (!fullName.length || !emailAddr.length || !subject.length || !phoneNumber.length || !description.length) {
+    return { valid: false, message: "Invalid form" };
+  }
+
   const response = await fetch(url, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      fullName: formData.fullName,
+      fullName: fullName,
       bestTimeToCall: "", // no longer used anyway
-      email: formData.emailAddr,
-      subject: formData.subject,
-      body: formData.description,
+      email: emailAddr,
+      subject: subject,
+      body: description,
+      phoneNumber: phoneNumber
     }),
   });
   if (response.status !== 200) {
     throw Error(response.statusText);
   }
-  return "Email sent.";
+  return { valid: true, message: "Email sent." };
 }
 
 export async function postSparqlQuery(formData) {
