@@ -5,6 +5,9 @@ const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000";
 const SPARQL_DEFAULT_URL =
   process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
 
+
+export const CHECK_OPERATIONS = ["*", "+", "-"];
+
 export async function getPublicInformation() {
   const response = await fetch(`${BACKEND_URL}/api/cv`);
   return await response.json();
@@ -69,15 +72,35 @@ function sanitize(input) {
   return sanitized.replace(reg, (match) => (map[match]));
 }
 
-export async function postContactForm(formData) {
-  const url = `${BACKEND_URL}/api/form-contact/submit`;
-  // sanitize & validate form
 
-  const checkNotBot = formData.check;
-  if (checkNotBot?.length) {
+function simpleBotDetection(input, num1, num2, operation) {
+  if (isNaN(input)) {
+    return false;
+  }
+  let checkNumber = parseInt(input);
+  let num1Parsed = parseInt(num1);
+  let num2Parsed = parseInt(num2);
+  switch (operation) {
+    case '+': return num1Parsed + num2Parsed === checkNumber;
+    case '*': return num1Parsed * num2Parsed === checkNumber;
+    case '-': return num1Parsed - num2Parsed === checkNumber;
+    default: return false;
+  }
+
+}
+export async function postContactForm(formData, num1, num2, operation) {
+  const url = `${BACKEND_URL}/api/form-contact/submit`;
+
+  // validate check
+
+  const checkNotBot = sanitize(formData.check);
+
+  if (!simpleBotDetection(checkNotBot, num1, num2, operation)) {
     console.log("bot detected");
     return { valid: true, message: "Email sent" };
   }
+
+  // sanitize & validate form
   const fullName = sanitize(formData.fullName);
   const emailAddr = sanitize(formData.emailAddr);
   const subject = sanitize(formData.subject);

@@ -1,4 +1,5 @@
 import express from "express";
+import crypto from "crypto";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
 import { configureNunjucks } from "./init.mjs";
@@ -10,6 +11,7 @@ import {
   getBlogPost,
   postContactForm,
   download,
+  CHECK_OPERATIONS
 } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
@@ -34,10 +36,13 @@ WHERE {
 
 const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
 const SESSION_KEY =
-  process.env.SESSION_KEY || "thisismysecrctekeyfhrgfgrfrty84fwir767";
-
+  process.env.SESSION_KEY || "$$secret_" + (new Date().getTime() + Math.random() + crypto.randomUUID());
 const app = express();
 const router = express.Router();
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 // CONFIG
 app.use(express.json());
@@ -47,13 +52,13 @@ app.use(
   })
 );
 
-const oneDay = 1000 * 60 * 60 * 24;
+const ONE_DAY = 1000 * 60 * 60 * 24;
 
 app.use(
   sessions({
     secret: SESSION_KEY,
     saveUninitialized: false,
-    cookie: { maxAge: oneDay },
+    cookie: { maxAge: ONE_DAY },
     resave: false,
   })
 );
@@ -115,10 +120,24 @@ router.get(
   "/contact",
   aw(async (req, res, _next) => {
     const message = req.query.message;
+    let num1 = getRndInteger(0, 10);
+    let num2 = getRndInteger(0, 10);
+    const randomOperation = CHECK_OPERATIONS[getRndInteger(0, CHECK_OPERATIONS.length)];
+    if (randomOperation === '-' && num1 < num2) {
+      let temp = num2;
+      num2 = num1;
+      num1 = temp;
+    }
+    req.session.num1 = num1;
+    req.session.num2 = num2;
+    req.session.randomOperation = randomOperation;
     res.render("contact.html", {
       pageTitle: WEBSITE_TITLE,
       activePage: "contact",
       message,
+      num1,
+      num2,
+      randomOperation
     });
   })
 );
@@ -128,7 +147,11 @@ router.post(
     if (req.session?.mailSent) {
       res.redirect("/contact?message=" + "mail already sent");
     } else {
-      const { valid, message } = await postContactForm(req.body);
+      const { message, valid } = await postContactForm(req.body, req.session.num1, req.session.num2, req.session.randomOperation);
+      req.session.num1 = null;
+      req.session.num2 = null;
+      req.session.randomOperation = null;
+
       req.session.mailSent = valid;
 
       res.redirect("/contact?message=" + message);
@@ -196,40 +219,4 @@ app.use((err, _req, res, _next) => {
 app.listen(SERVER_PORT, () => console.log(`Listen to ${SERVER_PORT}`));
 
 
-  nunjucksEnv.addFilter("json", function(value, spaces) {
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const jsonString = JSON.stringify(value, null, spaces).replace(
-      /</g,
-      "\\u003c"
-    );
-    return nunjucks.runtime.markSafe(jsonString);
-  });
-  nunjucksEnv.addFilter("slug", function(value, _spaces) {
-    const slugify = (input) => {
-      return input
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, "-") // Replace spaces with -
-        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-        .replace(/\-\-+/g, "-") // Replace multiple - with single -
-        .replace(/^-+/, "") // Trim - from start of text
-        .replace(/-+$/, ""); // Trim - from end of text
-    };
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const slug = slugify(value);
-    return nunjucks.runtime.markSafe(slug);
-  });
 
-  nunjucksEnv.addFilter("date", function(value, _spaces) {
-    if (value instanceof nunjucks.runtime.SafeString) {
-      value = value.toString();
-    }
-    const dateValue = new Date(value);
-    return nunjucks.runtime.markSafe(dateValue.toLocaleDateString("fr"));
-  });
-  markdown.register(nunjucksEnv, marked);
-}
