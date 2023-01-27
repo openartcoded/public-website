@@ -33,10 +33,21 @@
                 </div>
 
                 <div class="grid grid-cols-1 ">
-                    <label for="check">How much is {{num1}} {{randomOperation}} {{num2}}</label>
+                    <label for="check">{{num1}} {{randomOperation}} {{num2}} = ?</label>
                    <input class="rounded w-full" type="number" id="check" name="check" required>
                 </div>
 
+                <div class="grid grid-cols-1 mt-2">
+                    <div class="p-2 rounded bg-yellow-400 text-dark font-semibold">
+                    You can only send one email per day (24h).<br>
+                    If you submit this form, a technical cookie will be stored for 24 hours to avoid being spammed.<br>
+                    Your personal information (phone number, email address, name) will not be shared and are removed from our system after 1 year.<br>
+                    We do not use your data to track you in any way.<br>
+                    If you agree with this, please check the box, otherwise your request will be discarded.
+
+                   <input class="checkbox" type="checkbox" id="gdprConsent" name="gdprConsent" required>
+                    </div>
+                </div>
                 <div class="flex justify-end mt-2 ">
                 <input type="submit" value="Submit" class="bg-blue-300 rounded p-2  hover:bg-yellow-300">
 

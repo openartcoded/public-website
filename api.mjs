@@ -97,7 +97,7 @@ export async function postContactForm(formData, num1, num2, operation) {
 
   if (!simpleBotDetection(checkNotBot, num1, num2, operation)) {
     console.log("bot detected");
-    return { valid: true, message: "Email sent" };
+    return { valid: true, message: "Email sent." };
   }
 
   // sanitize & validate form

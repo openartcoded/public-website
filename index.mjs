@@ -58,7 +58,7 @@ app.use(
   sessions({
     secret: SESSION_KEY,
     saveUninitialized: false,
-    cookie: { maxAge: ONE_DAY },
+    cookie: { maxAge: ONE_DAY, sameSite: 'strict' },
     resave: false,
   })
 );
@@ -145,8 +145,12 @@ router.post(
   "/contact",
   aw(async (req, res, _next) => {
     if (req.session?.mailSent) {
-      res.redirect("/contact?message=" + "mail already sent");
+      res.redirect("/contact?message=" + "mail already sent. please wait 24h");
     } else {
+      if (!req.body.gdprConsent) {
+        res.redirect("/contact?message=" + "Request discarded. Consent not provided");
+        return;
+      }
       const { message, valid } = await postContactForm(req.body, req.session.num1, req.session.num2, req.session.randomOperation);
       req.session.num1 = null;
       req.session.num2 = null;
