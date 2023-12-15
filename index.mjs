@@ -84,7 +84,9 @@ router.get(
   "/resource/:id",
   aw(async (req, res, _next) => {
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     const resp = await download(req.params.id, ip);
     const headers = Array.from(resp.headers)
       .filter(([key]) => !key.includes("content-encoding"))
@@ -109,7 +111,9 @@ router.post(
   "/sparql-form",
   aw(async (req, res, _next) => {
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     const result = await postSparqlQuery(req.body, ip);
 
     res.render("sparql.html", {
@@ -160,7 +164,9 @@ router.post(
         return;
       }
       const ip =
-        req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+        req.headers["x-forwarded-for"]?.split(",")[0] ||
+        req.socket.remoteAddress ||
+        req.ip;
       const { message, valid } = await postContactForm(
         req.body,
         req.session.num1,
@@ -184,7 +190,9 @@ router.get(
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     res.render("gallery.html", {
       page: await gallery(page, pageSize, ip),
       pageTitle: WEBSITE_TITLE,
@@ -199,7 +207,9 @@ router.get(
     const id = req.params.postId;
     const slug = req.params.slug;
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     res.render("post.html", {
       post: await getBlogPost(id, slug, ip),
       pageTitle: WEBSITE_TITLE,
@@ -213,7 +223,9 @@ router.get(
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     res.render("blog.html", {
       posts: await getBlogPosts({}, page, pageSize, ip),
       pageTitle: WEBSITE_TITLE,
@@ -226,7 +238,9 @@ router.get(
   "/",
   aw(async (req, res, _next) => {
     const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket.remoteAddress ||
+      req.ip;
     res.render("index.html", {
       publicInfo: await getPublicInformation(ip),
       pageTitle: WEBSITE_TITLE,
