@@ -1,36 +1,52 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title%}Gallery{% endblock %} {%block
+content%} {%set pageNumber = page.pageable.pageNumber%} {%set gridRow = 2 if
+page.numberOfElements % 2 === 0 else 3 %}
 
-{% block title%}Gallery{% endblock %}
-
-{%block content%}
-{%set pageNumber =  page.pageable.pageNumber%}
-{%set gridRow = 2 if page.numberOfElements % 2 === 0 else 3 %}
-
-<div id="gallery" class="p-2">
-  <div class="block lg:flex lg:justify-center lg:grid  {{ 'lg:grid-rows-3' if gridRow == 3 else 'lg:grid-rows-2' }} lg:grid-flow-col gap-2">
+<div id="gallery" class="p-4">
+  <div
+    class="block  lg:flex lg:justify-center lg:grid  {{ 'lg:grid-rows-3' if gridRow == 3 else 'lg:grid-rows-2' }} lg:grid-flow-col gap-2"
+  >
     {%for image in page.content%}
-    <div class="mb-2 lg:mb-0 h-full w-full lg:h-72 lg:w-72 ">
-      <a href="{{image.imageLink}}" onclick="displayImageGallery(event)"  >
-      <img data-url="{{image.imageLink}}" loading="lazy" alt="{{image.title}}" class="object-fill rounded-lg border-2 border-indigo-400  h-full w-full" src="{{image.thumbnailUploadId}}" >
-    </a>
+    <div class="mb-2 lg:mb-0 h-full w-full lg:h-72 lg:w-72">
+      <a href="{{image.imageLink}}" onclick="displayImageGallery(event)">
+        <img
+          data-url="{{image.imageLink}}"
+          loading="lazy"
+          alt="{{image.title}}"
+          class="object-fill rounded-lg h-full w-full"
+          src="{{image.thumbnailUploadId}}"
+        />
+      </a>
     </div>
     {%endfor%}
   </div>
   {%if page.totalPages > 1 %}
-    <div class="flex justify-center">
-      {%if pageNumber != 0 %}
-        <a class="underline text-rose-700 mr-2"  data-href="/gallery?page={{pageNumber - 1}}" href="/gallery?page={{pageNumber - 1}}">Previous</a>
-      {%endif%}
-      {%if page.totalPages -1 > pageNumber%}
-        <a class="underline text-rose-700" data-href="/gallery?page={{pageNumber + 1}}" href="/gallery?page={{pageNumber + 1}}">Next</a>
-      {%endif%}
-    </div>
+  <div class="flex justify-center">
+    {%if pageNumber != 0 %}
+    <a
+      class="underline text-rose-700 mr-2"
+      data-href="/gallery?page={{pageNumber - 1}}"
+      href="/gallery?page={{pageNumber - 1}}"
+      >Previous</a
+    >
+    {%endif%} {%if page.totalPages -1 > pageNumber%}
+    <a
+      class="underline text-rose-700"
+      data-href="/gallery?page={{pageNumber + 1}}"
+      href="/gallery?page={{pageNumber + 1}}"
+      >Next</a
+    >
+    {%endif%}
+  </div>
   {%endif %}
 </div>
 
-
-<div id="galleryDetail" class="p-1 hidden">
-  <a data-href="/gallery?page={{pageNumber}}" href="/gallery?page={{pageNumber}}" class="text-rose text-right"></a>
+<div id="galleryDetail" class="hidden p-4">
+  <a
+    data-href="/gallery?page={{pageNumber}}"
+    href="/gallery?page={{pageNumber}}"
+    class="text-rose text-right"
+  ></a>
 </div>
 
 {%endblock%}

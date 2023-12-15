@@ -1,51 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Artcoded{% endblock %}</title>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>
-            {% block title %}Artcoded{% endblock %}
-        </title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
 
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#212121" />
+    <meta name="msapplication-navbutton-color" content="#212121" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#212121" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    {% block meta %}{% endblock %}
+    <link rel="stylesheet" href="/dist.css" />
+    {% block css %} {%endblock%}
+  </head>
 
-        <meta name="theme-color" content="#212121">
-        <meta name="msapplication-navbutton-color" content="#212121">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#212121">
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="og:type" content="website">
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-        {% block meta %}{% endblock %}
-        <link rel="stylesheet" href="/dist.css">
-        {% block css %}
-         {%endblock%}
-        </head>
+  <body>
+    <div class="min-h-screen flex flex-col">
+      {% block navbar%} {%include "navbar.html" %} {%endblock%}
 
-        <body>
-            <div class="min-h-screen flex flex-col">
-                {% block navbar%}
-                    {%include "navbar.html" %}
-                    {%endblock%}
+      <div class="relative flex flex-grow">
+        <main class="bg-slate-800 flex-1">
+          {%block messageFromBackend %} {% if message %}
+          <div class="flex justify-center m-2">
+            <p
+              class="lg:w-2/6 p-2 rounded bg-slate-700 text-white font-semibold"
+            >
+              {{message}}
+            </p>
+          </div>
+          {%endif%} {%endblock%} {% block content %} {%endblock%}
+        </main>
+      </div>
+    </div>
 
-                    <div class='relative flex flex-grow'>
-                        <main class='bg-slate-50 flex-1'>
-
-                    {%block messageFromBackend %}
-                    {% if message %}
-                    <div class="flex justify-center m-2">
-                        <p class="lg:w-2/6 p-2 rounded bg-slate-700 text-white font-semibold">{{message}}</p>
-                    </div>
-                    {%endif%}
-                {%endblock%}
-                            {% block content %}
-                            {%endblock%}
-                            </main>
-                        </div>
-                    </div>
-
-                    <script type="text/javascript" src="/app.js" async></script>
-                </body>
-
-            </html>
+    <script type="text/javascript" src="/app.js" async></script>
+  </body>
+</html>

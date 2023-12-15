@@ -1,64 +1,104 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title%}Contact{% endblock %} {%block
+content%}
 
-{% block title%}Contact{% endblock %}
-
-{%block content%}
-
-<div class="grid  p-2 lg:flex lg:justify-center">
-    <div class="lg:w-2/6 bg-slate-500 rounded ">
-        <div class="bg-stone-100 rounded p-2 m-2 ">
-            <span class="font-semibold">Contact me</span>
-        </div>
-        <div class=" bg-stone-100 m-2 rounded p-2">
-            <form method="post" action="contact">
-                <div class="grid grid-cols-1">
-                    <label for="fullName">Full name</label>
-                    <input class="rounded w-full" type="text" required id="fullName" name="fullName">
-                </div>
-                <div class="grid grid-cols-1">
-                    <label for="emailAddr">Email</label>
-                    <input class="rounded w-full" type="email" required id="emailAddr" name="emailAddr">
-                </div>
-                <div class="grid grid-cols-1">
-                    <label for="phoneNumber">Phone number</label>
-                    <input class="rounded w-full" type="text" required id="phoneNumber" name="phoneNumber">
-                </div>
-                <div class="grid grid-cols-1">
-                    <label for="subject">Subject</label>
-                    <input class="rounded w-full" type="text" required id="subject" name="subject">
-                </div>
-                <div class="grid grid-cols-1">
-                    <label for="description">Description</label>
-                    <textarea class="rounded w-full" required id="description" name="description"></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 ">
-                    <label for="check">{{num1}} {{randomOperation}} {{num2}} = ?</label>
-                   <input class="rounded w-full" type="number" id="check" name="check" required>
-                </div>
-
-                <div class="grid grid-cols-1 mt-2">
-                    <div class="p-2 rounded bg-yellow-400 text-dark font-semibold">
-                    You can only send one email per day (24h).<br>
-                    If you submit this form, a technical cookie will be stored for 24 hours to avoid being spammed.<br>
-                    Your personal information (phone number, email address, name) will not be shared and are removed from our system after 1 year.<br>
-                    We do not use your data to track you in any way.<br>
-                    If you agree with this, please check the box, otherwise your request will be discarded.
-
-                   <input class="checkbox" type="checkbox" id="gdprConsent" name="gdprConsent" required>
-                    </div>
-                </div>
-                <div class="flex justify-end mt-2 ">
-                <input type="submit" value="Submit" class="bg-blue-300 rounded p-2  hover:bg-yellow-300">
-
-                </div>
-            </form>
-        </div>
-
-
-
-
+<div class="grid p-2 lg:flex lg:justify-center">
+  <div class="lg:w-2/6 bg-slate-700 rounded">
+    <div class="text-white rounded p-2 m-2">
+      <span class="font-semibold">Contact me</span>
     </div>
+    <div class="bg-transparent text-white m-2 rounded p-2">
+      <form method="post" action="contact">
+        <div class="grid grid-cols-1">
+          <label for="fullName">Full name</label>
+          <input
+            class="rounded w-full bg-transparent"
+            type="text"
+            required
+            id="fullName"
+            name="fullName"
+          />
+        </div>
+        <div class="grid grid-cols-1">
+          <label for="emailAddr">Email</label>
+          <input
+            class="rounded w-full bg-transparent"
+            type="email"
+            required
+            id="emailAddr"
+            name="emailAddr"
+          />
+        </div>
+        <div class="grid grid-cols-1">
+          <label for="phoneNumber">Phone number</label>
+          <input
+            class="rounded w-full bg-transparent"
+            type="text"
+            required
+            id="phoneNumber"
+            name="phoneNumber"
+          />
+        </div>
+        <div class="grid grid-cols-1">
+          <label for="subject">Subject</label>
+          <input
+            class="rounded w-full bg-transparent"
+            type="text"
+            required
+            id="subject"
+            name="subject"
+          />
+        </div>
+        <div class="grid grid-cols-1">
+          <label for="description">Description</label>
+          <textarea
+            class="rounded w-full bg-transparent"
+            required
+            id="description"
+            name="description"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1">
+          <label for="check">{{num1}} {{randomOperation}} {{num2}} = ?</label>
+          <input
+            class="rounded w-full bg-transparent"
+            type="number"
+            id="check"
+            name="check"
+            required
+          />
+        </div>
+
+        <div class="grid grid-cols-1 mt-2 text-black">
+          <div class="p-2 rounded bg-slate-800 text-white font-semibold">
+            You can only send one email per day (24h).<br />
+            If you submit this form, a technical cookie will be stored for 24
+            hours to avoid being spammed.<br />
+            Your personal information (phone number, email address, name) will
+            not be shared and are removed from our system after 1 year.<br />
+            We do not use your data to track you in any way.<br />
+            If you agree with this, please check the box, otherwise your request
+            will be discarded.
+
+            <input
+              class="checkbox rounded"
+              type="checkbox"
+              id="gdprConsent"
+              name="gdprConsent"
+              required
+            />
+          </div>
+        </div>
+        <div class="flex justify-end mt-2">
+          <input
+            type="submit"
+            value="Submit"
+            class="bg-blue-800 rounded p-2 hover:bg-orange-500 hover:text-black"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {%endblock%}

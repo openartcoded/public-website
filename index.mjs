@@ -11,7 +11,7 @@ import {
   getBlogPost,
   postContactForm,
   download,
-  CHECK_OPERATIONS
+  CHECK_OPERATIONS,
 } from "./api.mjs";
 
 const SERVER_PORT = process.env.SERVER_PORT || 4000;
@@ -36,7 +36,8 @@ WHERE {
 
 const WEBSITE_TITLE = process.env.WEBSITE_TITLE || "Nordine Bittich";
 const SESSION_KEY =
-  process.env.SESSION_KEY || "$$secret_" + (new Date().getTime() + Math.random() + crypto.randomUUID());
+  process.env.SESSION_KEY ||
+  "$$secret_" + (new Date().getTime() + Math.random() + crypto.randomUUID());
 const app = express();
 const router = express.Router();
 
@@ -49,7 +50,7 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 );
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -58,9 +59,9 @@ app.use(
   sessions({
     secret: SESSION_KEY,
     saveUninitialized: false,
-    cookie: { maxAge: ONE_DAY, sameSite: 'strict' },
+    cookie: { maxAge: ONE_DAY, sameSite: "strict" },
     resave: false,
-  })
+  }),
 );
 
 app.use(cookieParser());
@@ -82,14 +83,16 @@ const aw = (cb) => {
 router.get(
   "/resource/:id",
   aw(async (req, res, _next) => {
-    const resp = await download(req.params.id);
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+    const resp = await download(req.params.id, ip);
     const headers = Array.from(resp.headers)
       .filter(([key]) => !key.includes("content-encoding"))
       .reduce((headers, [key, value]) => ({ [key]: value, ...headers }), {});
     res.set(headers);
 
     res.status(200).send(Buffer.from(await resp.arrayBuffer()));
-  })
+  }),
 );
 router.get(
   "/sparql-form",
@@ -100,12 +103,14 @@ router.get(
       defaultQuery: SPARQL_DEFAULT_QUERY,
       defaultAcceptType: "application/trig",
     });
-  })
+  }),
 );
 router.post(
   "/sparql-form",
   aw(async (req, res, _next) => {
-    const result = await postSparqlQuery(req.body);
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+    const result = await postSparqlQuery(req.body, ip);
 
     res.render("sparql.html", {
       pageTitle: WEBSITE_TITLE,
@@ -114,7 +119,7 @@ router.post(
       defaultQuery: req.body.sparqlQuery,
       defaultAcceptType: req.body.acceptType,
     });
-  })
+  }),
 );
 router.get(
   "/contact",
@@ -122,8 +127,9 @@ router.get(
     const message = req.query.message;
     let num1 = getRndInteger(0, 10);
     let num2 = getRndInteger(0, 10);
-    const randomOperation = CHECK_OPERATIONS[getRndInteger(0, CHECK_OPERATIONS.length)];
-    if (randomOperation === '-' && num1 < num2) {
+    const randomOperation =
+      CHECK_OPERATIONS[getRndInteger(0, CHECK_OPERATIONS.length)];
+    if (randomOperation === "-" && num1 < num2) {
       let temp = num2;
       num2 = num1;
       num1 = temp;
@@ -137,9 +143,9 @@ router.get(
       message,
       num1,
       num2,
-      randomOperation
+      randomOperation,
     });
-  })
+  }),
 );
 router.post(
   "/contact",
@@ -148,10 +154,20 @@ router.post(
       res.redirect("/contact?message=" + "mail already sent. please wait 24h");
     } else {
       if (!req.body.gdprConsent) {
-        res.redirect("/contact?message=" + "Request discarded. Consent not provided");
+        res.redirect(
+          "/contact?message=" + "Request discarded. Consent not provided",
+        );
         return;
       }
-      const { message, valid } = await postContactForm(req.body, req.session.num1, req.session.num2, req.session.randomOperation);
+      const ip =
+        req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
+      const { message, valid } = await postContactForm(
+        req.body,
+        req.session.num1,
+        req.session.num2,
+        req.session.randomOperation,
+        ip,
+      );
       req.session.num1 = null;
       req.session.num2 = null;
       req.session.randomOperation = null;
@@ -160,19 +176,21 @@ router.post(
 
       res.redirect("/contact?message=" + message);
     }
-  })
+  }),
 );
 router.get(
   "/gallery",
   aw(async (req, res, _next) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
     res.render("gallery.html", {
-      page: await gallery(page, pageSize),
+      page: await gallery(page, pageSize, ip),
       pageTitle: WEBSITE_TITLE,
       activePage: "gallery",
     });
-  })
+  }),
 );
 // ROUTES
 router.get(
@@ -180,35 +198,41 @@ router.get(
   aw(async (req, res, _next) => {
     const id = req.params.postId;
     const slug = req.params.slug;
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
     res.render("post.html", {
-      post: await getBlogPost(id, slug),
+      post: await getBlogPost(id, slug, ip),
       pageTitle: WEBSITE_TITLE,
       activePage: "blog",
     });
-  })
+  }),
 );
 router.get(
   "/blog",
   aw(async (req, res, _next) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
     res.render("blog.html", {
-      posts: await getBlogPosts({}, page, pageSize),
+      posts: await getBlogPosts({}, page, pageSize, ip),
       pageTitle: WEBSITE_TITLE,
       activePage: "blog",
     });
-  })
+  }),
 );
 
 router.get(
   "/",
-  aw(async (_req, res, _next) => {
+  aw(async (req, res, _next) => {
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
     res.render("index.html", {
-      publicInfo: await getPublicInformation(),
+      publicInfo: await getPublicInformation(ip),
       pageTitle: WEBSITE_TITLE,
       activePage: "",
     });
-  })
+  }),
 );
 
 app.use("/", router);
@@ -221,6 +245,3 @@ app.use((err, _req, res, _next) => {
 });
 
 app.listen(SERVER_PORT, () => console.log(`Listen to ${SERVER_PORT}`));
-
-
-

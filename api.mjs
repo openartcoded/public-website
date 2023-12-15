@@ -5,17 +5,30 @@ const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000";
 const SPARQL_DEFAULT_URL =
   process.env.SPARQL_DEFAULT_URL || "http://localhost:8888/public/sparql";
 
-
 export const CHECK_OPERATIONS = ["*", "+", "-"];
 
-export async function getPublicInformation() {
-  const response = await fetch(`${BACKEND_URL}/api/cv`);
+export async function getPublicInformation(ipAddr = null) {
+  const response = await fetch(`${BACKEND_URL}/api/cv`, {
+    method: "GET",
+    headers: ipAddr
+      ? {
+        "X-Forwarded-For": ipAddr,
+      }
+      : {},
+  });
   return await response.json();
 }
 
-export async function gallery(page = 0, pageSize = 9) {
+export async function gallery(page = 0, pageSize = 6, ipAddr) {
   const url = `${BACKEND_URL}/api/memzagram/public?page=${page}&size=${pageSize}&sort=updatedDate,DESC`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: ipAddr
+      ? {
+        "X-Forwarded-For": ipAddr,
+      }
+      : {},
+  });
   const data = await response.json();
   data.content.forEach((g) => {
     g.thumbnailUploadId = `/resource/${g.thumbnailUploadId}`;
@@ -24,10 +37,22 @@ export async function gallery(page = 0, pageSize = 9) {
   return data;
 }
 
-export async function download(id) {
-  const resp = await fetch(`${BACKEND_URL}/api/resource/public/download/${id}`);
+export async function download(id, ipAddr = null) {
+  const resp = await fetch(
+    `${BACKEND_URL}/api/resource/public/download/${id}`,
+    {
+      method: "GET",
+      headers: ipAddr
+        ? {
+          "X-Forwarded-For": ipAddr,
+        }
+        : {},
+    },
+  );
   if (resp.status !== 200) {
-    throw Error(`response status not 200: status: ${resp.status}, message: ${resp.statusText}`);
+    throw Error(
+      `response status not 200: status: ${resp.status}, message: ${resp.statusText}`,
+    );
   }
   return resp;
 }
@@ -35,21 +60,33 @@ export async function download(id) {
 export async function getBlogPosts(
   searchCriteria = {},
   page = 0,
-  pageSize = 3
+  pageSize = 3,
+  ipAddr = null,
 ) {
   const url = `${BACKEND_URL}/api/blog/public-search?page=${page}&size=${pageSize}&sort=updatedDate,DESC`;
+  let headers = {
+    "Content-Type": "application/json",
+  };
+  if (ipAddr) {
+    headers["X-Forwarded-For"] = ipAddr;
+  }
   const response = await fetch(url, {
     method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(searchCriteria),
   });
   return await response.json();
 }
-export async function getBlogPost(id, slug) {
+export async function getBlogPost(id, slug, ipAddr) {
   const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: ipAddr
+      ? {
+        "X-Forwarded-For": ipAddr,
+      }
+      : {},
+  });
   const json = await response.json();
   json.coverUrl = `/resource/${json.coverId}`;
   return json;
@@ -61,17 +98,16 @@ function sanitize(input) {
     return "";
   }
   const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    "/": '&#x2F;',
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
   };
-  const reg = /[&<>"'/]/ig;
-  return sanitized.replace(reg, (match) => (map[match]));
+  const reg = /[&<>"'/]/gi;
+  return sanitized.replace(reg, (match) => map[match]);
 }
-
 
 function simpleBotDetection(input, num1, num2, operation) {
   if (isNaN(input)) {
@@ -81,14 +117,17 @@ function simpleBotDetection(input, num1, num2, operation) {
   let num1Parsed = parseInt(num1);
   let num2Parsed = parseInt(num2);
   switch (operation) {
-    case '+': return num1Parsed + num2Parsed === checkNumber;
-    case '*': return num1Parsed * num2Parsed === checkNumber;
-    case '-': return num1Parsed - num2Parsed === checkNumber;
-    default: return false;
+    case "+":
+      return num1Parsed + num2Parsed === checkNumber;
+    case "*":
+      return num1Parsed * num2Parsed === checkNumber;
+    case "-":
+      return num1Parsed - num2Parsed === checkNumber;
+    default:
+      return false;
   }
-
 }
-export async function postContactForm(formData, num1, num2, operation) {
+export async function postContactForm(formData, num1, num2, operation, ipAddr) {
   const url = `${BACKEND_URL}/api/form-contact/submit`;
 
   // validate check
@@ -96,7 +135,7 @@ export async function postContactForm(formData, num1, num2, operation) {
   const checkNotBot = sanitize(formData.check);
 
   if (!simpleBotDetection(checkNotBot, num1, num2, operation)) {
-    console.log("bot detected");
+    console.log("bot detected: ", ipAddr);
     return { valid: true, message: "Email sent." };
   }
 
@@ -107,22 +146,32 @@ export async function postContactForm(formData, num1, num2, operation) {
   const phoneNumber = sanitize(formData.phoneNumber);
   const description = sanitize(formData.description);
 
-  if (!fullName.length || !emailAddr.length || !subject.length || !phoneNumber.length || !description.length) {
+  if (
+    !fullName.length ||
+    !emailAddr.length ||
+    !subject.length ||
+    !phoneNumber.length ||
+    !description.length
+  ) {
     return { valid: false, message: "Invalid form" };
   }
 
+  let headers = {
+    "Content-Type": "application/json",
+  };
+  if (ipAddr) {
+    headers["X-Forwarded-For"] = ipAddr;
+  }
   const response = await fetch(url, {
     method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify({
       fullName: fullName,
       bestTimeToCall: "", // no longer used anyway
       email: emailAddr,
       subject: subject,
       body: description,
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
     }),
   });
   if (response.status !== 200) {
@@ -131,7 +180,7 @@ export async function postContactForm(formData, num1, num2, operation) {
   return { valid: true, message: "Email sent." };
 }
 
-export async function postSparqlQuery(formData) {
+export async function postSparqlQuery(formData, ipAddr) {
   const url = SPARQL_DEFAULT_URL;
   const query = formData.sparqlQuery;
   let sparqlResultType = "application/sparql-results+json";
@@ -150,11 +199,15 @@ export async function postSparqlQuery(formData) {
     }
     const urlSearchParams = new URLSearchParams();
     urlSearchParams.set("query", query);
+    let headers = {
+      Accept: accept,
+    };
+    if (ipAddr) {
+      headers["X-Forwarded-For"] = ipAddr;
+    }
     const response = await fetch(url, {
       method: "post",
-      headers: {
-        Accept: accept,
-      },
+      headers,
       body: urlSearchParams,
     });
     if (response.status !== 200) {

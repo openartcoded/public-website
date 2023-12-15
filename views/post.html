@@ -1,26 +1,24 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title%}{{post.title}} {% endblock %} {%block
+content%}
 
-{% block title%}{{post.title}}
-{% endblock %}
+<div class="h-full">
+  <div class="grid p-2 grid-cols-1 md:flex md:justify-center">
+    <div class="bg-slate-700 rounded">
+      <div
+        class="bg-transparent text-white rounded p-2 m-2 flex justify-between"
+      >
+        <span class="font-semibold">{{post.title}}</span>
+        <span class="font-medium">{{post.creationDate | date}}</span>
+      </div>
+      <img class="p-2 w-full" src="{{post.coverUrl}}" />
 
-{%block content%}
-
-    <div class="grid  p-2  grid-cols-1 md:flex md:justify-center">
-        <div class="bg-slate-500 rounded ">
-            <div class="bg-stone-100 rounded p-2 m-2 flex justify-between">
-                <span class="font-semibold">{{post.title}}</span>
-                <span class="font-medium ">{{post.creationDate | date}}</span>
-            </div>
-            <img class="p-2 w-full" src="{{post.coverUrl}}">
-            
-            <article class="prose bg-stone-100 m-2 rounded p-2 md:prose-2xl">
-                {%markdown%}
-                {{post.content | safe}}
-                {%endmarkdown%}
-            </article>
-
-
-        </div>
+      <article
+        class="prose bg-transparent text-white m-2 rounded p-2 md:prose-2xl"
+      >
+        {%markdown%} {{post.content | safe}} {%endmarkdown%}
+      </article>
     </div>
+  </div>
+</div>
 
-    {%endblock%}
+{%endblock%}
