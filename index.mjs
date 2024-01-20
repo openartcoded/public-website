@@ -81,8 +81,9 @@ const aw = (cb) => {
 };
 
 // CACHE
-const CACHE = apicache.middleware;
-app.use(CACHE("5 minutes"));
+const cache = apicache.middleware;
+const onlyStatus200 = (_req, res) => res.statusCode === 200;
+const cacheSuccesses = cache("5 minutes", onlyStatus200);
 
 // ROUTES
 router.get(
@@ -191,7 +192,8 @@ router.post(
 );
 router.get(
   "/gallery",
-  aw(async (req, res, _next) => {
+  cacheSuccesses,
+  aw(async (req, res) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     const ip =
@@ -208,7 +210,8 @@ router.get(
 // ROUTES
 router.get(
   "/blog/posts/:postId/:slug",
-  aw(async (req, res, _next) => {
+  cacheSuccesses,
+  aw(async (req, res) => {
     const id = req.params.postId;
     const slug = req.params.slug;
     const ip =
@@ -224,7 +227,8 @@ router.get(
 );
 router.get(
   "/blog",
-  aw(async (req, res, _next) => {
+  cacheSuccesses,
+  aw(async (req, res) => {
     const page = parseInt(req.query.page) || undefined;
     const pageSize = parseInt(req.query.pageSize) || undefined;
     const ip =
@@ -241,7 +245,8 @@ router.get(
 
 router.get(
   "/",
-  aw(async (req, res, _next) => {
+  cacheSuccesses,
+  aw(async (req, res) => {
     const ip =
       req.headers["x-forwarded-for"]?.split(",")[0] ||
       req.socket.remoteAddress ||
