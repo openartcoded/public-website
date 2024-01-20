@@ -8,6 +8,10 @@ RUN npm i
 
 COPY public public
 
+RUN npm i -g terser 
+RUN terser --compress -o public/js/app.js --  public/js/app.js
+RUN npm remove terser
+
 COPY views views
 
 COPY tailwind tailwind
