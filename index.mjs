@@ -1,4 +1,5 @@
 import express from "express";
+import apicache from "apicache";
 import crypto from "crypto";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
@@ -78,6 +79,10 @@ app.use(express.static("public/manifest"));
 const aw = (cb) => {
   return (req, res, next) => cb(req, res, next).catch(next);
 };
+
+// CACHE
+const CACHE = apicache.middleware;
+app.use(CACHE("5 minutes"));
 
 // ROUTES
 router.get(
