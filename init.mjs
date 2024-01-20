@@ -3,7 +3,7 @@ import markdown from "nunjucks-markdown";
 import { marked } from "marked";
 import { minify } from "html-minifier";
 
-function minifyMiddleware(req, res, next) {
+function minifyMiddleware(_req, res, next) {
   res.oldRender = res.render;
   res.render = function(view, options) {
     this.oldRender(view, options, function(err, html) {
