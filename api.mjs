@@ -12,8 +12,8 @@ export async function getPublicInformation(ipAddr = null) {
     method: "GET",
     headers: ipAddr
       ? {
-        "X-Forwarded-For": ipAddr,
-      }
+          "X-Forwarded-For": ipAddr,
+        }
       : {},
   });
   return await response.json();
@@ -25,8 +25,8 @@ export async function gallery(page = 0, pageSize = 6, ipAddr) {
     method: "GET",
     headers: ipAddr
       ? {
-        "X-Forwarded-For": ipAddr,
-      }
+          "X-Forwarded-For": ipAddr,
+        }
       : {},
   });
   const data = await response.json();
@@ -44,8 +44,8 @@ export async function download(id, ipAddr = null) {
       method: "GET",
       headers: ipAddr
         ? {
-          "X-Forwarded-For": ipAddr,
-        }
+            "X-Forwarded-For": ipAddr,
+          }
         : {},
     },
   );
@@ -79,12 +79,15 @@ export async function getBlogPosts(
 }
 export async function getBlogPost(id, slug, ipAddr) {
   const url = `${BACKEND_URL}/api/blog/post/${slug}/${id}`;
+  if (ipAddr) {
+    console.log(`[${ipAddr}]: getBlogPost ${id}`);
+  }
   const response = await fetch(url, {
     method: "GET",
     headers: ipAddr
       ? {
-        "X-Forwarded-For": ipAddr,
-      }
+          "X-Forwarded-For": ipAddr,
+        }
       : {},
   });
   const json = await response.json();
