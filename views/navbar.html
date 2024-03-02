@@ -8,8 +8,8 @@
 {%endif%} {% endmacro %}
 <nav class="bg-slate-900 w-full border-b border-slate-700 p-2 text-slate-700 touch-none">
   <div class="md:flex md:justify-between">
-    <a class="hidden md:inline font-bold bg-orange-500 rounded ps-1 pe-1" href="/" data-href="/">{%block navTitle
-      %}{{"artcoded" if not pageTitle else
+    <a class="hidden md:inline hover:bg-orange-800 font-bold rounded ps-1 pe-1 text-white" href="/"
+      data-href="/">{%block navTitle %}{{"artcoded" if not pageTitle else
       pageTitle}}{%endblock%}</a>
     <div class="flex justify-evenly md:justify-end gap-1 lg:gap-8">
       {{linkOrText('home', '', 'visible md:hidden' )}} {{linkOrText('blog',

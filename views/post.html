@@ -7,8 +7,10 @@ content%}
       <div
         class="bg-transparent text-white rounded p-2 m-2 flex justify-between"
       >
-        <span class="font-semibold">{{post.title}}</span>
-        <span class="font-medium">{{post.creationDate | date}}</span>
+        <span class="text-xl font-bold capitalize">{{post.title}}</span>
+        <span class="font-medium text-gray-200"
+          >{{post.creationDate | date}}</span
+        >
       </div>
       <img class="p-2 w-full" src="{{post.coverUrl}}" />
 
