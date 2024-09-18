@@ -59,11 +59,9 @@
         </svg>
       </a>
     </div>
-    {#
-    <div class="text-gray-200 bg-slate-500 font-medium rounded mb-2 p-2">
+    <div class="bg-slate-700 rounded mb-2 p-2 skill text-slate-200">
       {{publicInfo.introduction | safe}}
     </div>
-    #}
   </div>
   <div class="sm:block lg:flex lg:place-content-center lg:gap-4">
     <div class="lg:w-3/12">
@@ -109,7 +107,7 @@
         data-name="{{experience.title}}"
       >
         <div class="bg-transparent text-white rounded p-2 flex justify-between">
-          <span class="font-semibold">{{experience.title}}</span>
+          <span class="font-semibold">{{experience.title}} @ {{experience.company}}</span>
           <span class="font-medium"
             >{{experience.from | date}} - {{"Current" if experience.current else
             experience.to | date}}</span
