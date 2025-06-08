@@ -1,27 +1,29 @@
-FROM node:20-alpine
+FROM alpine AS builder
 
-WORKDIR /app
+RUN apk add --no-cache \
+    curl \
+    git \
+    bash \
+    npm \
+    openssh \
+    hugo
 
-COPY package.json package-lock.json ./
+WORKDIR /site
 
-RUN npm i
+COPY . .
 
-COPY public public
+RUN rm -rf public
+RUN hugo  --environment production 
 
-RUN npm i -g terser 
-RUN terser --compress -o public/js/app.js --  public/js/app.js
-RUN npm remove terser
+FROM nginx:1.28-alpine
 
-COPY views views
+RUN rm -rf /usr/share/nginx/html/*
 
-COPY tailwind tailwind
+COPY --from=builder /site/public /usr/share/nginx/html/public
 
-COPY index.mjs index.mjs
-COPY api.mjs api.mjs
-COPY init.mjs init.mjs 
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY env.sh /docker-entrypoint.d/env.sh
+RUN chmod +x /docker-entrypoint.d/env.sh
 
-COPY tailwind.config.js tailwind.config.js
+EXPOSE 80
 
-RUN npm run tailwind:minify
-
-ENTRYPOINT [ "node", "index.mjs" ]

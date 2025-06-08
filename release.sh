@@ -1,5 +1,5 @@
-
-git checkout main
+# usage: bash release.sh 0.1.2
+git checkout master
 git pull
 
 npm version $1

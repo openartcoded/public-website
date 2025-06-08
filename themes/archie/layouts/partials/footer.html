@@ -1,0 +1,16 @@
+<footer>
+    <div style="display: flex">
+        {{- range $index, $key := .Site.Params.Social -}} {{- if hasPrefix $key.icon
+        "simple:" -}}
+        <a class="soc" target="_blank" href="{{ $key.url }}" rel="me" title="{{ $key.name }}"><i
+                class="si si-{{ substr $key.icon 7 }}"></i></a>
+        {{- else -}}
+        <a class="soc" target="_blank" style="color: white" href="{{ $key.url }}" rel="me" title="{{ $key.name }}">{{ $key.name }}</a>
+        {{- end -}}
+        <a class="border"></a>
+        {{- end -}}
+    </div>
+    <div class="footer-info">
+        {{ dateFormat "2006" now }} {{ with .Site.Copyright }} {{ . }} {{ end }}
+    </div>
+</footer>

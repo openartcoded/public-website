@@ -1,0 +1,60 @@
+/* Button styling */
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    font-family: "Roboto Mono", monospace;
+    font-size: 15px;
+    border: none;
+    border-bottom: 3px solid var(--darkMaincolor);
+    cursor: pointer;
+}
+
+.dropbtn:hover {
+    color: black;
+    background-color: var(--darkMaincolor);
+}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown content, hidden by default */
+.dropdown-content {
+    display: none;
+    border: none;
+    width: 100%;
+    position: absolute;
+    background: black;
+    z-index: 1;
+}
+
+/* Links styling */
+.dropdown-content a {
+    font-family: "Roboto Mono", monospace;
+    font-size: 15px;
+    color: white;
+    display: block;
+
+    border-bottom: 3px solid var(--darkMaincolor);
+}
+
+/* Hover effect */
+.dropdown-content a:hover {
+    opacity: 1;
+    color: black;
+    background-color: var(--darkMaincolor);
+}
+
+/* Show dropdown when any child (e.g., button) is focused */
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
+
+/* Optional: style the button when open */
+.dropdown:focus-within .dropbtn {
+    background-color: #50fa7b;
+    color: black;
+    opacity: 0.8;
+}

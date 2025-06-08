@@ -1,7 +1,9 @@
-# Public website V2
+# bittich.be
 
-WIP
+## Dev:
 
-## tailwind
+`hugo server`
 
-npx tailwindcss -i ./tailwind/styles.css -o ./public/css/dist.css --watch
+## Docker:
+
+`docker run  -p "8083:80" -e "PREG_REPLACE_BASE_URL=http://localhost:8083" --rm x`

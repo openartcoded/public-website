@@ -1,0 +1,66 @@
+baseURL = "http://localhost:8083"
+languageCode = 'en-us'
+title = 'Bittich.be'
+copyright = "(c) Bittich.be"
+theme = 'archie'
+
+# enable KaTeX support
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/nbittich"
+
+[[params.social]]
+name = "Linkedin"
+icon = "linkedin"
+url = "https://www.linkedin.com/in/nbittich/"
+
+
+[params]
+mode = 'dark'
+useCDN = false
+mathjax = false
+katex = false
+customcss = ["css/dropdown.css"]
+
+[menu]
+[[menu.main]]
+name = "About"
+url = "/about-me/"
+weight = 2
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+
+[[menu.main]]
+name = "Posts"
+url = "/posts"
+weight = 3
+
+
+[[menu.main]]
+name = "Tags"
+url = "/tags"
+weight = 4
+
+
+[[menu.main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects"
+weight = 1
+[[menu.main]]
+identifier = "adana"
+name = "Adana"
+url = "/projects/adana"
+parent = "projects"
+weight = 2
+[[menu.main]]
+identifier = "swarm"
+name = "Swarm"
+url = "/projects/swarm"
+parent = "projects"
+weight = 3
