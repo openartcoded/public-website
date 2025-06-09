@@ -7,6 +7,8 @@ tags = ["projects"]
 
 [Adana](https://github.com/nbittich/adana) is a scripting programming language, repl and namespaced aliases for commands.
 
+[Try it out!](https://nbittich.github.io/adana/)
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
