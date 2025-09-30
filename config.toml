@@ -4,7 +4,6 @@ title = 'Bittich.be'
 copyright = "(c) Bittich.be"
 theme = 'archie'
 
-# enable KaTeX support
 [[params.social]]
 name = "GitHub"
 icon = "github"
