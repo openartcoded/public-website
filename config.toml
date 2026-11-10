@@ -52,6 +52,12 @@ name = "Projects"
 url = "/projects"
 weight = 1
 [[menu.main]]
+identifier = "artcoded"
+name = "Artcoded"
+url = "/projects/artcoded"
+parent = "projects"
+weight = 1
+[[menu.main]]
 identifier = "adana"
 name = "Adana"
 url = "/projects/adana"
@@ -63,3 +69,15 @@ name = "Swarm"
 url = "/projects/swarm"
 parent = "projects"
 weight = 3
+[[menu.main]]
+identifier = "tortank"
+name = "Tortank"
+url = "/projects/tortank"
+parent = "projects"
+weight = 4
+[[menu.main]]
+identifier = "rdfa-processor"
+name = "RDFa processor"
+url = "/projects/rdfa-processor"
+parent = "projects"
+weight = 5

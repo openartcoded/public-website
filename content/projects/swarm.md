@@ -42,7 +42,7 @@ Jobs can be scheduled using cron expressions, and the entire system is adaptable
 
 Swarm also has a dedicated microservice called `sync-consumer`, that lets third parties consume the extracted data without having to run their own Swarm instance; when a job finishes successfully, the system generates an archive containing the new triples to insert, the triples to delete, and the intersection with the previous job (for initial sync), making it straightforward to keep external triplestores in sync.
 
-This feature was not well tested, so if you'd like to try it, please [contact me](/about).
+This feature was not well tested, so if you'd like to try it, please [contact me](/about-me/).
 
 Swarm is developed in Rust, but other languages can be used. For example, the filter step is written in Java.
 
@@ -72,5 +72,5 @@ These components are not intended for production use due to their experimental n
 
 ### Request for Removal
 
-If you identify personal or sensitive data sourced from your website and would like it to be removed, please [contact me](/about).
+If you identify personal or sensitive data sourced from your website and would like it to be removed, please [contact me](/about-me/).
 I will review your request and take appropriate action without delay.

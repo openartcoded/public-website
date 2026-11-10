@@ -4,10 +4,10 @@ draft = false
 title = 'Nordine Bittich'
 +++
 
-** Email:** [contact@bittich.be](mailto:contact@bittich.be)  
-** Website:** [bittich.be](https://bittich.be)  
-** LinkedIn:** [linkedin.com/in/nbittich](https://www.linkedin.com/in/nbittich)  
-** GitHub:** [github.com/nbittich](https://github.com/nbittich)
+**Email:** [contact@bittich.be](mailto:contact@bittich.be)  
+**Website:** [bittich.be](https://bittich.be)  
+**LinkedIn:** [linkedin.com/in/nbittich](https://www.linkedin.com/in/nbittich)  
+**GitHub:** [github.com/nbittich](https://github.com/nbittich)
 
 ---
 
@@ -21,7 +21,6 @@ title = 'Nordine Bittich'
 - Implementation of an ETL to extract, transform, validate and publish RDF triples from HTML pages (RDFa)
 - Providing support for different teams (pair programming, peer reviews, debugging, implementing features)
 - Working in Agile across multiple projects simultaneously
-- Worked simultaneously on multiple Agile projects
 - **Technologies:** Node.js, Java, Docker, Ruby, Virtuoso, SPARQL, SHACL, Ember.js, Git, Jena, Elixir, RDF, Rust
 
 ### Full-Stack Developer — Atos / European Commission
@@ -76,7 +75,7 @@ title = 'Nordine Bittich'
 
 **Jan 2017 – Dec 2017**
 
-- Implementation of a web portal for the Public Services Department of the Walloon Governmen
+- Implementation of a web portal for the Public Services Department of the Walloon Government
 - Analysis and development of web forms based on Jway
 - Development of a SOAP web service using Apache CXF
 - Refactoring and maintenance
@@ -122,11 +121,11 @@ title = 'Nordine Bittich'
 - **Java:** Spring (Boot, Cloud, Data), Quarkus, JPA/Hibernate, JSF, CXF, Maven, Gradle, Java 17+, JSP, OSGi (Karaf), RxJava
 - **Frontend:** HTML, CSS, TypeScript, JavaScript, Angular, React, Vue.js, Ember.js, Quasar, Webpack, Vite, Node.js, JQuery
 - **Go:** Echo Web Framework
-- **Rust:** Tokio, Axum, Cargo
+- **Rust:** Tokio, Axum, Cargo, WebAssembly (wasm-bindgen)
 
 ### **DevOps & Tools**
 
-- Docker, Kubernetes, Jenkins, Ansible, Prometheus, Logstash, Zookeeper, Kibana, Zuul, SVN, Git, IntelliJ, Bash, Linux, Vim
+- Docker, Docker Compose, Kubernetes, Jenkins, GitHub Actions, Woodpecker CI, Ansible, Keycloak, Prometheus, Logstash, Zookeeper, Kibana, Zuul, SVN, Git, IntelliJ, Bash, Linux, Vim
 
 ### **Testing & Quality**
 
@@ -134,11 +133,11 @@ title = 'Nordine Bittich'
 
 ### **Integration & Messaging**
 
-- Apache Kafka, ActiveMQ, Artemis, Apache Camel, REST, SOAP
+- Apache Kafka, ActiveMQ, Artemis, NATS, Apache Camel, REST, SOAP
 
 ### **Databases**
 
-- PostgreSQL, MySQL, Oracle, H2, Redis, MongoDB, Cassandra, ElasticSearch
+- PostgreSQL, MySQL, Oracle, H2, Redis, MongoDB, Cassandra, ElasticSearch, Meilisearch
 
 ### **Linked Data / Semantic Web**
 
@@ -155,9 +154,11 @@ _IEPSCF, Sept 2010 – June 2013_
 
 ## Personal Projects
 
-- **Swarm:** [Project Page](https://swarm.bittich.be)
-- **OpenArtcoded:** [GitHub Repo](https://github.com/openartcoded)
-- **Adana:** [Live Demo](https://nbittich.github.io/adana/)
+- **Artcoded:** the app I use to manage my freelance administration (invoices, expenses, dossiers for my accountant, CV, website). Java / Spring Boot, Angular, Jena. [More](/projects/artcoded) · [GitHub](https://github.com/openartcoded)
+- **Swarm:** scrapes RDFa pages published by Flemish local administrations and republishes them as linked data. Rust. [More](/projects/swarm) · [Project Page](https://swarm.bittich.be)
+- **Adana:** scripting language, repl and namespaced command line aliases. Rust. [More](/projects/adana) · [Live Demo](https://nbittich.github.io/adana/)
+- **Tortank:** Turtle / N-Triples parser and in-memory RDF store, usable from Rust and JavaScript (wasm). [More](/projects/tortank) · [Playground](https://nbittich.github.io/tortank)
+- **RDFa processor:** extracts RDF statements from html based on RDFa annotations, usable from Rust and JavaScript (wasm). [More](/projects/rdfa-processor) · [Demo](https://nbittich.github.io/graph-rdfa-processor/)
 
 ---
 
