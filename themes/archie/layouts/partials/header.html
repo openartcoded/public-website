@@ -28,7 +28,7 @@
 	      {{- if (.Site.Params.useCDN | default false) -}}
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons-font@v13/font/simple-icons.min.css" type="text/css">
 	      {{- else -}}
-		<link rel="stylesheet" href="{{ (resources.Get "css/simple-icons.css" | fingerprint).Permalink }}" type="text/css">
+		<link rel="stylesheet" href="{{ (resources.Get "css/simple-icons.css" | fingerprint).RelPermalink }}" type="text/css">
 	      {{- end -}}
 	    {{- end -}}
 	  {{- end -}}
@@ -39,15 +39,15 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
 	{{- else -}}
 	{{ $fontstyle := resources.Get "css/fonts.css" | fingerprint }}
-        <link href="{{ $fontstyle.Permalink }}" rel="stylesheet">
+        <link href="{{ $fontstyle.RelPermalink }}" rel="stylesheet">
 	{{ end }}
 
 	{{ $style := resources.Get "css/main.css" | fingerprint }}
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ $style.Permalink }}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ $style.RelPermalink }}" />
 
 	{{- if or (eq .Site.Params.mode "auto") (eq .Site.Params.mode "dark") (eq .Site.Params.mode "toggle") -}}
 		{{ $darkstyle := resources.Get "css/dark.css" | fingerprint }}
-		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="{{ $darkstyle.Permalink }}" {{ if eq .Site.Params.mode "auto" }}media="(prefers-color-scheme: dark)"{{ end }} {{ if eq .Site.Params.mode "toggle" }}disabled{{ end }} />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="{{ $darkstyle.RelPermalink }}" {{ if eq .Site.Params.mode "auto" }}media="(prefers-color-scheme: dark)"{{ end }} {{ if eq .Site.Params.mode "toggle" }}disabled{{ end }} />
 	{{- end -}}
 
 	<!-- Mathjax support -->
@@ -56,7 +56,7 @@
 		{{ if .Site.Params.useCDN | default false -}}
 		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 		{{- else -}}
-		src="{{ absURL "js/MathJax.js" }}">
+		src="{{ relURL "js/MathJax.js" }}">
 		{{- end -}}
 		</script>
 		<!-- inline Mathjax -->
@@ -82,9 +82,9 @@
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
 		{{- else -}}
-		<link rel="stylesheet" href="{{ absURL "katex/katex.min.css" }} ">
-		<script defer src="{{ absURL "katex/katex.min.js" }}"></script>
-		<script defer src="{{ absURL "katex/auto-render.min.js" }}" onload="renderMathInElement(document.body);"></script>
+		<link rel="stylesheet" href="{{ relURL "katex/katex.min.css" }} ">
+		<script defer src="{{ relURL "katex/katex.min.js" }}"></script>
+		<script defer src="{{ relURL "katex/auto-render.min.js" }}" onload="renderMathInElement(document.body);"></script>
 		{{ end -}}
 		<!-- inline KaTeX -->
 		<script>
@@ -103,7 +103,7 @@
 	{{- if isset .Site.Params "customcss" }}
 		{{ range .Site.Params.customCSS }}
 		{{ $customstyle := resources.Get . | fingerprint }}
-		<link rel="stylesheet" type="text/css" href="{{ $customstyle.Permalink }}">
+		<link rel="stylesheet" type="text/css" href="{{ $customstyle.RelPermalink }}">
 		{{ end }}
 	{{- end -}}
 	{{- range .Site.Params.customJS }}
@@ -112,7 +112,7 @@
 	{{- else if (hasPrefix . "<script")}}
     {{ .| safeHTML }}
 	{{- else }}
-	<script src="{{ absURL . }}"></script>
+	<script src="{{ relURL . }}"></script>
 	{{- end }}
 	{{- end }}
 </head>
